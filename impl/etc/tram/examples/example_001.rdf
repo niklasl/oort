@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:ex="http://example.org/ns#">
+    <ex:Thing rdf:about="http://example.org/2009/example_001">
+        <ex:value1>plain</ex:value1>
+        <ex:value2 xml:lang="en">English</ex:value2>
+        <ex:value3 rdf:datatype="http://www.w3.org/2001/XMLSchema#string">typed</ex:value3>
+        <ex:value4 rdf:parseType="XMLLiteral"><anyXml>typed</anyXml></ex:value4>
+        <ex:rel1 rdf:resource="http://example.org/2009/example_001/otherthing"/>
+        <ex:rel2 rdf:parseType="Resource">
+            <rdf:type rdf:resource="http://example.org/ns#Anonymous"/>
+            <ex:value5>anonymous 1</ex:value5>
+        </ex:rel2>
+        <ex:list1 rdf:parseType="Collection">
+            <rdf:Description ex:value6="anonymous 2"/>
+            <rdf:Description><ex:value7>anonymous 3</ex:value7></rdf:Description>
+            <ex:Striped rdf:about="http://example.org/striped"/>
+            <rdf:Description rdf:about="http://example.org/elsewhere"/>
+        </ex:list1>
+        <!--TODO: rdf:Seq,Bag,Alt+rdf:li ; explicit rdf:List+rdf:first,rdf:rest,rdf:nil -->
+    </ex:Thing>
+    <ex:Other rdf:about="http://example.org/2009/example_001/otherthing">
+        <rdf:type rdf:resource="http://example.org/ns2/Special"/>
+        <rdf:type rdf:resource="tag:example.org,2009:ns:Tag"/>
+        <ex:value8>otherthing</ex:value8>
+    </ex:Other>
+    <ex:Void rdf:about="http://example.org/2009/example_001/void">
+        <rdf:type rdf:resource="http://example.org/ns#None"/>
+        <ex:value9>void</ex:value9>
+        <ex:value3 rdf:datatype="http://example.org/other#odd">odd</ex:value3>
+    </ex:Void>
+</rdf:RDF>

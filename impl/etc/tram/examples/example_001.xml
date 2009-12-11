@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<graph xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+       xmlns:ex="http://example.org/ns#"
+       xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <resource uri="http://example.org/2009/example_001">
+    <a><ex:Thing/></a>
+    <ex:value1>plain</ex:value1>
+    <ex:value2 xml:lang="en">English</ex:value2>
+    <ex:value3 fmt="datatype">
+      <xsd:string>typed</xsd:string>
+    </ex:value3>
+    <ex:value4 fmt="xml">
+      <anyXml>typed</anyXml>
+    </ex:value4>
+    <ex:rel1 ref="http://example.org/2009/example_001/otherthing"/>
+    <ex:rel2>
+      <a><ex:Anonymous/></a>
+      <ex:value5>anonymous 1</ex:value5>
+    </ex:rel2>
+    <ex:list1>
+      <li>
+        <ex:value6>anonymous 2</ex:value6>
+      </li>
+      <li>
+        <ex:value7>anonymous 3</ex:value7>
+      </li>
+      <li ref="http://example.org/striped"/>
+      <li ref="http://example.org/elsewhere"/>
+    </ex:list1>
+  </resource>
+  <resource uri="http://example.org/striped">
+    <a><ex:Striped/></a>
+  </resource>
+  <resource uri="http://example.org/2009/example_001/otherthing">
+    <a><ex:Other/></a>
+    <a><Special xmlns="http://example.org/ns2/"/></a>
+    <a><Tag xmlns="tag:example.org,2009:ns:"/></a>
+    <ex:value8>otherthing</ex:value8>
+  </resource>
+  <resource uri="http://example.org/2009/example_001/void">
+    <a><ex:Void/></a>
+    <a><ex:None/></a>
+    <ex:value9>void</ex:value9>
+    <ex:value3 fmt="datatype">
+      <odd xmlns="http://example.org/other#">odd</odd>
+    </ex:value3>
+  </resource>
+</graph>
