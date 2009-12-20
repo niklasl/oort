@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:ex="http://example.org/ns#">
+
+    <!-- no statements; skip -->
+    <rdf:Description rdf:about="http://example.org/example_002/item_0"/>
+    <rdf:Description/>
+
+    <!-- top-level uri -->
+    <rdf:Description rdf:about="http://example.org/example_002/item_1">
+        <ex:value>item 1</ex:value>
+    </rdf:Description>
+    <!-- top-level bnode -->
+    <rdf:Description>
+        <ex:value>bnode 1</ex:value>
+    </rdf:Description>
+
+    <!-- spread out top-level uri -->
+    <rdf:Description rdf:about="http://example.org/example_002/item_2">
+        <ex:value>item 2.1</ex:value>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://example.org/example_002/item_2">
+        <ex:value>item 2.2</ex:value>
+    </rdf:Description>
+    <!-- spread out top-level bnode -->
+    <rdf:Description rdf:nodeID="bnode_2">
+        <ex:value>bnode 2.1</ex:value>
+    </rdf:Description>
+    <rdf:Description rdf:nodeID="bnode_2">
+        <ex:value>bnode 2.2</ex:value>
+    </rdf:Description>
+
+    <!-- spread out striped uri -->
+    <rdf:Description>
+        <ex:value>bnode 3</ex:value>
+        <ex:rel>
+            <rdf:Description rdf:about="http://example.org/example_002/item_3">
+                <ex:value>item 3.1</ex:value>
+            </rdf:Description>
+        </ex:rel>
+        <ex:rel>
+            <!-- item_4 is exclusively striped (does not occur at top-level) -->
+            <rdf:Description rdf:about="http://example.org/example_002/item_4">
+                <ex:value>item 4.1</ex:value>
+            </rdf:Description>
+        </ex:rel>
+        <ex:list rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://example.org/example_002/item_3">
+                <ex:value>item 3.2</ex:value>
+            </rdf:Description>
+            <rdf:Description rdf:about="http://example.org/example_002/item_4">
+                <ex:value>item 4.2</ex:value>
+            </rdf:Description>
+        </ex:list>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://example.org/example_002/item_3">
+        <ex:value>item 3.3</ex:value>
+    </rdf:Description>
+
+    <!-- spread out striped bnode -->
+    <rdf:Description>
+        <ex:value>bnode 4</ex:value>
+        <ex:rel>
+            <rdf:Description rdf:nodeID="bnode_5">
+                <ex:value>bnode 5.1</ex:value>
+            </rdf:Description>
+        </ex:rel>
+        <ex:rel rdf:nodeID="bnode_6"/>
+    </rdf:Description>
+    <rdf:Description rdf:nodeID="bnode_5">
+        <ex:value>bnode 5.2</ex:value>
+    </rdf:Description>
+    <rdf:Description rdf:nodeID="bnode_6">
+        <ex:value>bnode 6</ex:value>
+    </rdf:Description>
+
+</rdf:RDF>
