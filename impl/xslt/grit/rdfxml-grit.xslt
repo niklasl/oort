@@ -29,20 +29,26 @@
         </doas:XSLTStylesheet>
     </xsl:template>
 
-    <!-- TODO:
-         - non-sugared rdf:List..
-         - interpreted rdf:li (rdf:Seq, rdf:Bag, rdf:Alt)
-         - @rdf:ID (to use everywhere @rdf:about is used)
-         - @xml:base (to resolve about, resource and ID against)
-         - inherited @xml:lang (to use *only* on the literal property itself)
+    <!--
+    TODO:
+        - non-sugared rdf:List..
+        - interpreted rdf:li (rdf:Seq, rdf:Bag, rdf:Alt)..
 
-         - rework topresources (select about and nodeID via //* plus *[not(...)] top-level bnodes)
+        - @xml:base: to resolve about, resource and ID against
+            - currently no or uniform use of relative uri:s is assumed
+            - and crude special-casing of "#..." is done in final uri values
 
-         Unsupported by current design:
-         - @rdf:nodeID (no named bnodes in output)
+        - @rdf:ID: normalize with @rdf:about use ("concat($base, '#', @rdf:ID)")
+            - currently assumes uses of ID are isolated
+
+    To improve:
+        - topresources algorithm.. (about and nodeID via //*, *[not(...)] top-level bnodes)
+
+    Unsupported by current design:
+        - named bnodes (@rdf:nodeID) in output (bnodes are inlined in rels)
     -->
 
-    <xsl:param name="base" select="//*/@xml:base[position()=1]"/>
+    <xsl:param name="base" select="/*/@xml:base[position()=1]"/>
 
     <xsl:variable name="all-namespaces" select="//*/namespace::*"/>
 
@@ -52,49 +58,74 @@
     <xsl:template match="/">
         <graph>
             <xsl:copy-of select="$all-namespaces"/>
+            <xsl:copy-of select="$base"/>
             <xsl:call-template name="topresources">
                 <xsl:with-param name="descriptions" select="rdf:RDF/* | *[not(self::rdf:RDF)]"/>
+                <xsl:with-param name="atroot" select="true()"/>
             </xsl:call-template>
         </graph>
     </xsl:template>
 
     <xsl:template name="topresources">
+        <xsl:param name="atroot" select="false()"/>
         <xsl:param name="descriptions"/>
         <xsl:for-each select="$descriptions">
             <xsl:choose>
-
+                <!--
+                <xsl:when test="self::rdf:Description[not(*)] and not(../@rdf:parseType='Collection')"/>
+                -->
                 <xsl:when test="self::rdf:Description[not(*)]"/>
 
-                <xsl:when test="@rdf:about and
-                          generate-id() = generate-id(key('about', @rdf:about)[1])">
+                <xsl:when test="@rdf:about">
+                    <xsl:variable name="aboutthis" select="key('about', @rdf:about)"/>
+                    <!--
+                    <xsl:if test="generate-id() = generate-id($aboutthis[1])">
+                    -->
+                    <xsl:if test="generate-id() = generate-id($aboutthis[1])
+                          or $aboutthis[1]/../@rdf:parseType='Collection'">
+                        <resource>
+                            <xsl:attribute name="uri">
+                                <xsl:call-template name="normalize-uri">
+                                    <xsl:with-param name="uri" select="@rdf:about"/>
+                                </xsl:call-template>
+                            </xsl:attribute>
+                            <xsl:for-each select="$aboutthis">
+                                <xsl:call-template name="resourcebody"/>
+                            </xsl:for-each>
+                        </resource>
+                    </xsl:if>
+                </xsl:when>
+
+                <xsl:when test="@rdf:ID">
                     <resource>
-                        <xsl:attribute name="uri"><xsl:value-of select="@rdf:about"/></xsl:attribute>
-                        <xsl:for-each select="key('about', @rdf:about)">
+                        <xsl:attribute name="uri">
+                            <xsl:call-template name="normalize-uri">
+                                <xsl:with-param name="uri" select="concat('#', @rdf:ID)"/>
+                            </xsl:call-template>
+                        </xsl:attribute>
+                        <xsl:for-each select=".">
                             <xsl:call-template name="resourcebody"/>
                         </xsl:for-each>
                     </resource>
                 </xsl:when>
 
-                <xsl:when test="not(@rdf:about) and not(@rdf:nodeID) or ( @rdf:nodeID and
+                <xsl:when test="$atroot and not(@rdf:nodeID) or (@rdf:nodeID and
                           generate-id() = generate-id(key('bnode', @rdf:nodeID)[1]) and
-                          not(../*//*[@rdf:nodeID = current()/@rdf:nodeID]) )">
+                          not($atroot and ../*//*[@rdf:nodeID = current()/@rdf:nodeID]) )">
                     <resource>
                         <xsl:for-each select=". | key('bnode', @rdf:nodeID)">
                             <xsl:call-template name="resourcebody"/>
                         </xsl:for-each>
                     </resource>
                 </xsl:when>
-
             </xsl:choose>
 
             <xsl:call-template name="topresources">
                 <xsl:with-param name="descriptions"
-                                select="*[not(@rdf:parseType='XMLLiteral')]/*[
-                                        @rdf:about]"/>
-                                    <!-- | @rdf:nodeID -->
+                                select="*[not(@rdf:parseType='XMLLiteral')]/*[@rdf:about | *]"/>
             </xsl:call-template>
             <!-- if inlined bnodes weren't kept inlined, they should be expanded here:
-                    select="//*[@rdf:parseType='Resource']" -->
+                    select="*/*[@rdf:nodeID | @rdf:parseType='Resource']" -->
 
         </xsl:for-each>
     </xsl:template>
@@ -113,7 +144,11 @@
                         <li>
                             <xsl:choose>
                                 <xsl:when test="@rdf:about">
-                                    <xsl:attribute name="ref"><xsl:value-of select="@rdf:about"/></xsl:attribute>
+                                    <xsl:attribute name="ref">
+                                        <xsl:call-template name="normalize-uri">
+                                            <xsl:with-param name="uri" select="@rdf:about"/>
+                                        </xsl:call-template>
+                                    </xsl:attribute>
                                 </xsl:when>
                                 <xsl:otherwise>
                                     <xsl:call-template name="resourcebody"/>
@@ -123,10 +158,18 @@
                     </xsl:for-each>
                 </xsl:when>
                 <xsl:when test="*/@rdf:about">
-                    <xsl:attribute name="ref"><xsl:value-of select="*/@rdf:about"/></xsl:attribute>
+                    <xsl:attribute name="ref">
+                        <xsl:call-template name="normalize-uri">
+                            <xsl:with-param name="uri" select="*/@rdf:about"/>
+                        </xsl:call-template>
+                    </xsl:attribute>
                 </xsl:when>
                 <xsl:when test="@rdf:resource">
-                    <xsl:attribute name="ref"><xsl:value-of select="@rdf:resource"/></xsl:attribute>
+                    <xsl:attribute name="ref">
+                        <xsl:call-template name="normalize-uri">
+                            <xsl:with-param name="uri" select="@rdf:resource"/>
+                        </xsl:call-template>
+                    </xsl:attribute>
                 </xsl:when>
                 <xsl:when test="@rdf:nodeID">
                     <xsl:variable name="nodeRef" select="."/>
@@ -161,7 +204,10 @@
                 </xsl:when>
                 <!-- plain/language literals -->
                 <xsl:otherwise>
-                    <xsl:copy-of select="@*"/>
+                    <xsl:variable name="lang" select="(ancestor-or-self::*/@xml:lang)[last()]"/>
+                    <xsl:if test="$lang and $lang != ''">
+                        <xsl:attribute name="xml:lang"><xsl:value-of select="$lang"/></xsl:attribute>
+                    </xsl:if>
                     <xsl:apply-templates/>
                 </xsl:otherwise>
             </xsl:choose>
@@ -258,6 +304,26 @@
                 </xsl:call-template>
             </xsl:when>
             <xsl:otherwise><xsl:value-of select="$index"/></xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="normalize-uri">
+        <!-- very incomplete (see TODO list above) -->
+        <xsl:param name="uri"/>
+        <xsl:choose>
+            <xsl:when test="$uri = ''">
+                <xsl:value-of select="$base"/>
+            </xsl:when>
+            <xsl:when test="starts-with($uri, '#')">
+                <xsl:value-of select="concat($base, $uri)"/>
+            </xsl:when>
+            <!-- overly careful "is relative" check -->
+            <xsl:when test="not(contains($uri, ':')) and not(contains($uri, '/'))">
+                <xsl:value-of select="concat($base, $uri)"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$uri"/>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
