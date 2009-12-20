@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<graph xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ex="http://example.org/ns#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <resource uri="http://example.org/example_002/item_1">
+    <ex:value>item 1</ex:value>
+  </resource>
+  <resource>
+    <ex:value>bnode 1</ex:value>
+  </resource>
+  <resource uri="http://example.org/example_002/item_2">
+    <ex:value>item 2.1</ex:value>
+    <ex:value>item 2.2</ex:value>
+  </resource>
+  <resource>
+    <ex:value>bnode 2.1</ex:value>
+    <ex:value>bnode 2.2</ex:value>
+  </resource>
+  <resource>
+    <ex:value>bnode 3</ex:value>
+    <ex:rel ref="http://example.org/example_002/item_3"/>
+    <ex:rel ref="http://example.org/example_002/item_4"/>
+    <ex:list>
+      <li ref="http://example.org/example_002/item_3"/>
+      <li ref="http://example.org/example_002/item_4"/>
+    </ex:list>
+  </resource>
+  <resource uri="http://example.org/example_002/item_3">
+    <ex:value>item 3.1</ex:value>
+    <ex:value>item 3.2</ex:value>
+    <ex:value>item 3.3</ex:value>
+  </resource>
+  <resource uri="http://example.org/example_002/item_4">
+    <ex:value>item 4.1</ex:value>
+    <ex:value>item 4.2</ex:value>
+  </resource>
+  <resource>
+    <ex:value>bnode 4</ex:value>
+    <ex:rel>
+      <ex:value>bnode 5.1</ex:value>
+      <ex:value>bnode 5.2</ex:value>
+    </ex:rel>
+    <ex:rel>
+      <ex:value>bnode 6</ex:value>
+    </ex:rel>
+  </resource>
+</graph>
