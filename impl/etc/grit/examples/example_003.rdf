@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:ex="http://example.org/ns#"
+         xml:base="http://example.org/">
+    <rdf:Description rdf:about="example_003/item_1">
+        <ex:value>item 1</ex:value>
+        <ex:rel rdf:resource="#concept_1"/>
+    </rdf:Description>
+    <rdf:Description rdf:ID="concept_1">
+        <ex:value>concept 1</ex:value>
+    </rdf:Description>
+</rdf:RDF>
