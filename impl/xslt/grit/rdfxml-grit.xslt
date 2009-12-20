@@ -6,19 +6,19 @@
          Copyright: Niklas Lindström [lindstream@gmail.com]
          License: BSD-style -->
     <xsl:template name="_description">
-        <doas:XSLTStylesheet rdf:about="http://purl.org/oort/impl/xslt/tram/rdfxml-tram.xslt"
+        <doas:XSLTStylesheet rdf:about="http://purl.org/oort/impl/xslt/grit/rdfxml-grit.xslt"
                              xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                              xmlns:dct="http://purl.org/dc/terms/"
                              xmlns:foaf="http://xmlns.com/foaf/0.1/"
                              xmlns:doas="http://purl.org/net/ns/doas#">
-            <dct:title>Tram</dct:title>
-            <dct:description xml:lang="en">Transformable RDF Markup</dct:description>
+            <dct:title>Grit XSLT</dct:title>
+            <dct:description xml:lang="en">Transforms RDF/XML to Grokkable RDF In Trees.</dct:description>
             <dct:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date"
                          >2009-12-08</dct:created>
             <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date"
                         >2009-12-20</dct:modified>
             <dct:license rdf:resource="http://usefulinc.com/doap/licenses/bsd"/>
-            <foaf:primaryTopic rdf:resource="http://purl.org/oort/def/2009/tram"/>
+            <foaf:primaryTopic rdf:resource="http://purl.org/oort/def/2009/grit"/>
             <dct:creator>
                 <foaf:Person rdf:about="http://purl.org/NET/dust/foaf#self">
                     <foaf:name>Niklas Lindström</foaf:name>
