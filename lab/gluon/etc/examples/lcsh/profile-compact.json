@@ -1,0 +1,22 @@
+{
+    "prefix": {
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "skos": "http://www.w3.org/2004/02/skos/core#",
+        "dct": "http://purl.org/dc/terms/",
+        "bibo": "http://purl.org/ontology/bibo/"
+    },
+    "define": {
+        "a": {"term": "rdf:type", "symbol": true, "many": false},
+        "created": {"from": "dct", "datatype": "xsd:dateTime"},
+        "modified": {"from": "dct", "datatype": "xsd:dateTime"},
+        "lccn": {"from": "bibo"},
+        "closeMatch": {"reference": true, "many": false},
+        "prefLabel": {"localized": true},
+        "altLabel": {"many": true, "localized": true},
+        "broader": {"reference": true},
+        "narrower": {"reference": true},
+        "related": {"reference": true}
+    },
+    "default": "skos"
+}

@@ -1,0 +1,43 @@
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://id.loc.gov/authorities/sh95000541#concept> a skos:Concept;
+    dct:created "2000-04-28T00:00:00-04:00"^^xsd:dateTime;
+    dct:modified "2001-10-01T09:56:06-04:00"^^xsd:dateTime;
+    bibo:lccn "sh95000541";
+    skos:altLabel "W3 (World Wide Web)"@en,
+        "WWW (World Wide Web)"@en,
+        "Web (World Wide Web)"@en,
+        "World Wide Web (Information retrieval system)"@en;
+    skos:broader <http://id.loc.gov/authorities/sh88002671#concept>,
+        <http://id.loc.gov/authorities/sh92002381#concept>;
+    skos:closeMatch <http://stitch.cs.vu.nl/vocabularies/rameau/ark:/12148/cb13319953j>;
+    skos:narrower <http://id.loc.gov/authorities/sh2002000569#concept>,
+        <http://id.loc.gov/authorities/sh2003001415#concept>,
+        <http://id.loc.gov/authorities/sh2007008317#concept>,
+        <http://id.loc.gov/authorities/sh2007008319#concept>,
+        <http://id.loc.gov/authorities/sh2008009697#concept>,
+        <http://id.loc.gov/authorities/sh97003254#concept>;
+    skos:prefLabel "World Wide Web"@en;
+    skos:related <http://id.loc.gov/authorities/sh92002816#concept> .
+
+<http://id.loc.gov/authorities/sh2002000569#concept> skos:prefLabel "Semantic Web"@en .
+
+<http://id.loc.gov/authorities/sh2003001415#concept> skos:prefLabel "WebDAV (Standard)"@en .
+
+<http://id.loc.gov/authorities/sh2007008317#concept> skos:prefLabel "Mashups (World Wide Web)"@en .
+
+<http://id.loc.gov/authorities/sh2007008319#concept> skos:prefLabel "Web 2.0"@en .
+
+<http://id.loc.gov/authorities/sh2008009697#concept> skos:prefLabel "Invisible Web"@en .
+
+<http://id.loc.gov/authorities/sh88002671#concept> skos:prefLabel "Hypertext systems"@en .
+
+<http://id.loc.gov/authorities/sh92002381#concept> skos:prefLabel "Multimedia systems"@en .
+
+<http://id.loc.gov/authorities/sh92002816#concept> skos:prefLabel "Internet"@en .
+
+<http://id.loc.gov/authorities/sh97003254#concept> skos:prefLabel "WebTV (Trademark)"@en .
+

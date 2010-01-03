@@ -1,0 +1,84 @@
+{
+    "profile": {
+        "prefix": {
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "skos": "http://www.w3.org/2004/02/skos/core#",
+            "dct": "http://purl.org/dc/terms/",
+            "bibo": "http://purl.org/ontology/bibo/"
+        },
+        "define": {
+            "a": {"term": "rdf:type", "symbol": true, "many": false},
+            "created": {"from": "dct", "datatype": "xsd:dateTime"},
+            "modified": {"from": "dct", "datatype": "xsd:dateTime"},
+            "lccn": {"from": "bibo"},
+            "closeMatch": {"reference": true, "many": false},
+            "prefLabel": {"localized": true},
+            "altLabel": {"many": true, "localized": true},
+            "broader": {"reference": true},
+            "narrower": {"reference": true},
+            "related": {"reference": true}
+        },
+        "default": "skos"
+    },
+    "lang": "en",
+    "base": "http://id.loc.gov/authorities/",
+    "linked": {
+        "sh95000541#concept": {
+            "a": "Concept",
+            "prefLabel": "World Wide Web",
+            "lccn": "sh95000541",
+            "altLabel": [
+                "W3 (World Wide Web)",
+                "Web (World Wide Web)",
+                "World Wide Web (Information retrieval system)",
+                "WWW (World Wide Web)"
+            ],
+            "closeMatch": "http://stitch.cs.vu.nl/vocabularies/rameau/ark:/12148/cb13319953j",
+            "related": [
+                "sh92002816#concept"
+            ],
+            "broader": [
+                "sh88002671#concept",
+                "sh92002381#concept"
+            ],
+            "narrower": [
+                "sh2008009697#concept",
+                "sh97003254#concept",
+                "sh2002000569#concept",
+                "sh2003001415#concept",
+                "sh2007008317#concept",
+                "sh2007008319#concept"
+            ],
+            "created": "2000-04-28T00:00:00-04:00",
+            "modified": "2001-10-01T09:56:06-04:00"
+        },
+        "sh92002816#concept": {
+            "prefLabel": "Internet"
+        },
+        "sh88002671#concept": {
+            "prefLabel": "Hypertext systems"
+        },
+        "sh92002381#concept": {
+            "prefLabel": "Multimedia systems"
+        },
+        "sh2008009697#concept": {
+            "prefLabel": "Invisible Web"
+        },
+        "sh97003254#concept": {
+            "prefLabel": "WebTV (Trademark)"
+        },
+        "sh2002000569#concept": {
+            "prefLabel": "Semantic Web"
+        },
+        "sh2003001415#concept": {
+            "prefLabel": "WebDAV (Standard)"
+        },
+        "sh2007008317#concept": {
+            "prefLabel": "Mashups (World Wide Web)"
+        },
+        "sh2007008319#concept": {
+            "prefLabel": "Web 2.0"
+        }
+    }
+}
