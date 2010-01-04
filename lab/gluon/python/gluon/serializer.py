@@ -1,8 +1,13 @@
 # -*- coding: UTF-8 -*-
 from rdflib.syntax.serializers import Serializer
+from rdflib.namespace import RDF, _XSD_NS
 from gluon import Profile
 from gluon.deps import json
 from rdflib.term import URIRef, Literal, BNode
+
+
+PLAIN_LITERAL_TYPES = set(
+        [_XSD_NS.integer, _XSD_NS.float, _XSD_NS.boolean])
 
 
 class GluonSerializer(Serializer):
@@ -11,6 +16,15 @@ class GluonSerializer(Serializer):
 
     def serialize(self, stream, base=None, encoding=None, **args):
         raise NotImplementedError # TODO (+ profile kw..)
+
+
+class State(object):
+    def __init__(self, graph, profile, token_for_uri, lang, base):
+        self.graph = graph
+        self.profile = profile
+        self.token_for_uri = token_for_uri
+        self.lang = lang
+        self.base = base
 
 
 # TODO: reuse rdflib things, e.g. RecursiveSerializer, used-qname-checking..
@@ -27,7 +41,8 @@ def to_tree(graph, profile=None, lang=None, base=None):
         token_for_uri = lambda uri: _qname(graph, uri)
     else:
         profile_data = profile.source
-        token_for_uri = lambda uri: profile.token_for_uri(text(uri)) or _qname(graph, uri)
+        token_for_uri = lambda uri: profile.token_for_uri(text(uri)) or (
+                _qname(graph, uri))
 
     tree = {'profile': profile_data}
     if lang: tree['lang'] = lang
@@ -39,10 +54,10 @@ def to_tree(graph, profile=None, lang=None, base=None):
     nodes = []
     use_linked_and_nodes = profile and profile.definitions
 
-    state = graph, profile, token_for_uri, lang, base
+    state = State(graph, profile, token_for_uri, lang, base)
 
     for s in set(graph.subjects()):
-        current = _subject_to_data(state, s)
+        current = _subject_to_node(state, s)
         s_value = resolve(text(s), base)
         if isinstance(s, URIRef):
             if use_linked_and_nodes:
@@ -63,86 +78,110 @@ def to_tree(graph, profile=None, lang=None, base=None):
 
     return tree
 
-def _subject_to_data(state, s):
-    graph, profile, token_for_uri, lang, base = state
+def _subject_to_node(state, s):
     current = {}
-    p_os = {}
-    for p, o in graph.predicate_objects(s):
-        os = p_os.setdefault(p, [])
-        os.append(o)
-    for p, os in p_os.items():
-        repr_value = lambda o: _to_raw_value(state, o)
-        dfn = profile.definitions.get(text(p)) if profile else None
-        if dfn:
-            p_key = dfn.token
-            if dfn.many is None:
-                many = not _has_one_literal(os)
-            else:
-                many = dfn.many
-            if dfn.reference:
-                repr_value = lambda o: resolve(text(o), base)
-            elif dfn.symbol:
-                repr_value = lambda o: token_for_uri(o)
-            elif dfn.localized:
-                repr_value = (lambda o:
-                        text(o) if o.language == lang
-                        else _to_raw_value(state, o))
-            elif dfn.datatype:
-                repr_value = (lambda o:
-                        text(o)
-                        if text(o.datatype) == dfn.datatype_uri
-                        else _to_raw_value(state, o))
-        else:
-            p_key = token_for_uri(p)
-            many = not _has_one_literal(os)
-
-        obj = None
-        if _has_lang_literal(os):
-            obj = {}
-            lang_many = False
-            for o in os:
-                if not isinstance(o, Literal) or not o.language:
-                    obj = None
-                    break
-                lang_key = '@'+o.language
-                if lang_key in obj:
-                    lang_many = True
-                v = repr_value(o)
-                if isinstance(v, dict):
-                    if lang_many:
-                        cur_v = obj.get(lang_key) or []
-                        if not isinstance(cur_v, list):
-                            obj[lang_key] = cur_v = [cur_v]
-                        cur_v.append(v[lang_key])
-                    else:
-                        obj.update(v)
-
-        if not obj:
-            if not many:
-                obj = repr_value(os[0])
-            else:
-                obj = [repr_value(o) for o in os]
-
-        current[p_key] = obj
+    p_objs = {}
+    for p, o in state.graph.predicate_objects(s):
+        objs = p_objs.setdefault(p, [])
+        objs.append(o)
+    for p, objs in p_objs.items():
+        p_key, node = _key_and_node(state, p, objs)
+        current[p_key] = node
 
     return current
 
+def _key_and_node(state, p, objs):
+    p_key, many, repr_value = _handles_for_property(state, p, objs)
+    node = None
+    if _has_lang_literal(objs):
+        node = {}
+        lang_many = False
+        for o in objs:
+            if not isinstance(o, Literal) or not o.language:
+                node = None
+                break
+            lang_key = '@'+o.language
+            if lang_key in node:
+                lang_many = True
+            v = repr_value(o)
+            if isinstance(v, dict):
+                if lang_many:
+                    cur_v = node.get(lang_key) or []
+                    if not isinstance(cur_v, list):
+                        node[lang_key] = cur_v = [cur_v]
+                    cur_v.append(v[lang_key])
+                else:
+                    node.update(v)
+    if not node:
+        if not many:
+            node = repr_value(objs[0])
+        else:
+            node = [repr_value(o) for o in objs]
+    return p_key, node
+
+def _handles_for_property(state, p, objs):
+    repr_value = lambda o: _to_raw_value(state, o)
+    dfn = state.profile.definitions.get(text(p)) if state.profile else None
+    if dfn:
+        p_key = dfn.token
+        if dfn.many is None:
+            many = not _has_one_literal(objs)
+        else:
+            many = dfn.many
+
+        if dfn.reference:
+            repr_value = lambda o: resolve(text(o), state.base)
+        elif dfn.symbol:
+            repr_value = lambda o: state.token_for_uri(o)
+        elif dfn.localized:
+            repr_value = (lambda o:
+                    text(o) if o.language == state.lang
+                    else _to_raw_value(state, o))
+        elif dfn.datatype:
+            repr_value = (lambda o:
+                    text(o)
+                    if text(o.datatype) == dfn.datatype_uri
+                    else _to_raw_value(state, o))
+    else:
+        p_key = state.token_for_uri(p)
+        many = not _has_one_literal(objs)
+
+    return p_key, many, repr_value
+
+
 def _to_raw_value(state, o):
-    graph, profile, token_for_uri, lang, base = state
-    # TODO: support for collections and rdf:_{i} forms (using '$list')
-    if isinstance(o, BNode):
-        return _subject_to_data(state, o)
-    if isinstance(o, URIRef):
-        return {'$ref': resolve(text(o), base)}
+    coll = _to_collection(state, o)
+    if coll:
+        return coll
+    elif isinstance(o, BNode):
+        return _subject_to_node(state, o)
+    elif isinstance(o, URIRef):
+        return {'$ref': resolve(text(o), state.base)}
     else:
         v = text(o)
         if o.language:
             return {'@'+o.language: v}
         elif o.datatype:
-            return {'$datatype': token_for_uri(o.datatype), '$value': v}
-            return {'$ref': v}
+            if o.datatype in PLAIN_LITERAL_TYPES:
+                return o.toPython()
+            return {'$datatype': state.token_for_uri(o.datatype), '$value': v}
         else:
             return v
+
+def _to_collection(state, subj):
+    graph = state.graph
+    node = None
+    #from rdflib.graph import Seq
+    #rtypes = list(graph.objects(subj, RDF.type))
+    #if any(t in rtypes for t in (RDF.Seq, RDF.Bag, RDF.Alt)):
+    #    node = dict([_key_and_node(state, RDF.type, rtypes)])
+    #    node['$list'] = list(Seq(graph, subj))
+    #else:
+    if (subj, RDF.first, None) in graph:
+        node = {'$list': list(_to_raw_value(state, o)
+                                for o in graph.items(subj))}
+    return node
+
 
 def _qname(graph, uri):
     pfx, ns, lname = graph.compute_qname(uri)
@@ -153,6 +192,7 @@ def _has_lang_literal(items):
 
 def _has_one_literal(items):
     return (len(items) == 1 and isinstance(items[0], Literal))
+
 
 def text(value, encoding='utf-8'):
     return value.encode(encoding)
