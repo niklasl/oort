@@ -51,7 +51,8 @@ def _sort_lists(obj):
         return
     for v in obj.values():
         if isinstance(v, list):
-            v.sort()
+            # need type in key for combinations of bool, int, float..
+            v.sort(key=lambda x: (x, type(x).__name__))
             for lv in v:
                 _sort_lists(lv)
         else:

@@ -2,6 +2,7 @@
 from __future__ import with_statement
 from contextlib import closing
 from rdflib.syntax.parsers import Parser
+from rdflib.namespace import RDF
 from gluon import Profile
 from gluon.deps import json
 from rdflib.graph import ConjunctiveGraph
@@ -36,48 +37,6 @@ def to_rdf(tree, graph=None, profile_source=None):
         _populate_graph(state, subject, data)
     return graph
 
-def _populate_graph(state, subject, data):
-    graph, profile, lang, base = state
-    for p, os in data.items():
-        if p in ('$uri',):
-            continue
-        pred_uri = profile.uri_for_key(p)
-        pred = URIRef(pred_uri)
-        add_obj = lambda obj: graph.add((subject, pred, obj))
-        dfn = profile.definitions.get(pred_uri)
-        if not isinstance(os, list):
-            os = [os]
-        # TODO: check if datatype is JSON compatible (bool, int..)
-        for o in os:
-            if not isinstance(o, dict):
-                if dfn and dfn.localized:
-                    o = {'@'+lang: o}
-                elif dfn and dfn.datatype:
-                    o = {'$datatype': dfn.datatype, '$value': o}
-                elif dfn and dfn.reference:
-                    o = {'$ref': o}
-                elif dfn and dfn.symbol:
-                    o = {'$ref': profile.uri_for_key(o)}
-                else:
-                    add_obj(Literal(o))
-                    continue
-
-            if any(k.startswith('@') for k in o):
-                for langkey, value in o.items():
-                    values = value if isinstance(value, list) else [value]
-                    for value in values:
-                        obj = Literal(value, lang=langkey[1:])
-                        add_obj(obj)
-                continue
-            elif '$datatype' in o:
-                obj = Literal(o['$value'],
-                        datatype=profile.uri_for_key(o['$datatype']))
-            elif '$ref' in o:
-                obj = URIRef(o['$ref'], base)
-            else:
-                obj = BNode()
-                _populate_graph(state, obj, o)
-            add_obj(obj)
 
 def _subject_data_pairs(linked=None, *listed):
     if linked:
@@ -89,4 +48,71 @@ def _subject_data_pairs(linked=None, *listed):
         for data in l:
             yield data.get('$uri'), data
 
+
+def _populate_graph(state, subject, data):
+    graph, profile, lang, base = state
+    for p, nodes in data.items():
+        if p in ('$uri',):
+            continue
+        pred_uri = profile.uri_for_key(p)
+        pred = URIRef(pred_uri)
+        add_obj = lambda obj: graph.add((subject, pred, obj))
+        dfn = profile.definitions.get(pred_uri)
+
+        if not isinstance(nodes, list):
+            nodes = [nodes]
+        for node in nodes:
+            if isinstance(node, dict) and '$list' in node:
+                node = node.copy()
+                pending_list = node.pop('$list')
+            else:
+                pending_list = None
+
+            for obj in _generate_objects(state, dfn, node):
+                add_obj(obj)
+
+            if pending_list:
+                l_subj, l_next = obj, None
+                for l_node in pending_list:
+                    if l_next:
+                        graph.add((l_subj, RDF.rest, l_next))
+                        l_subj = l_next
+                    for l_obj in _generate_objects(state, None, l_node):
+                        graph.add((l_subj, RDF.first, l_obj))
+                        l_next = BNode()
+                graph.add((l_subj, RDF.rest, RDF.nil))
+
+
+def _generate_objects(state, dfn, node):
+    graph, profile, lang, base = state
+
+    if not isinstance(node, dict):
+        if dfn and dfn.localized:
+            node = {'@'+lang: node}
+        elif dfn and dfn.datatype:
+            node = {'$datatype': dfn.datatype, '$value': node}
+        elif dfn and dfn.reference:
+            node = {'$ref': node}
+        elif dfn and dfn.symbol:
+            node = {'$ref': profile.uri_for_key(node)}
+        else:
+            yield Literal(node)
+            return
+
+    if any(k.startswith('@') for k in node):
+        for langkey, value in node.items():
+            values = value if isinstance(value, list) else [value]
+            for value in values:
+                yield Literal(value, lang=langkey[1:])
+        return
+
+    if '$datatype' in node:
+        yield Literal(node['$value'],
+                datatype=profile.uri_for_key(node['$datatype']))
+    elif '$ref' in node:
+        yield URIRef(node['$ref'], base)
+    else:
+        obj = BNode()
+        _populate_graph(state, obj, node)
+        yield obj
 

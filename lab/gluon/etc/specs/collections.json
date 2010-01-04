@@ -1,0 +1,30 @@
+{
+    "profile": {
+        "prefix": {
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "dct": "http://purl.org/dc/terms/"
+        }
+    },
+    "resources": [
+        {
+            "$uri": "http://example.org/item/1",
+            "rdf:value": [
+                {
+                    "$list": ["a", "b", "c"]
+                }
+            ],
+            "dct:source": [
+                {
+                    "$list": [
+                        {"$ref": "http://example.org/source/1"},
+                        {"dct:title": "Source 2"}
+                    ]
+                }
+            ]
+        },
+        {
+            "$uri": "http://example.org/source/1",
+            "dct:title": "Source 1"
+        }
+    ]
+}

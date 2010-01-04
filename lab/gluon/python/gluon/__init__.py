@@ -38,7 +38,9 @@ class Profile(object):
         return ns+key
 
     def uri_for_key(self, token):
-        if ':' in token:
+        if token.startswith('$'):
+            return token
+        elif ':' in token:
             uri = self.resolve_curie(token)
             return uri
         elif token in self._token_uri_map:
