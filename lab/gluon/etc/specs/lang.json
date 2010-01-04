@@ -7,11 +7,8 @@
     "resources": [
         {
             "$uri": "http://example.org/item/1",
-            "dct:source": [
-                {
-                    "dct:title": {"@en": "Example"}
-                }
-            ]
+            "dct:title": {"@en": "Example", "@sv": "Exempel"}
         }
     ]
 }
+

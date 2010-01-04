@@ -1,0 +1,18 @@
+{
+    "profile": {
+        "prefix": {
+            "dct": "http://purl.org/dc/terms/",
+            "xsd": "http://www.w3.org/2001/XMLSchema#"
+        }
+    },
+    "resources": [
+        {
+            "$uri": "http://example.org/item/1",
+            "dct:created": {
+                "$value": "2010-01-04T01:35:14Z",
+                "$datatype": "xsd:dateTime"
+            }
+        }
+    ]
+}
+

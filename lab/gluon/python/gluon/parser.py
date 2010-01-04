@@ -2,7 +2,7 @@
 from __future__ import with_statement
 from contextlib import closing
 from rdflib.syntax.parsers import Parser
-from gluon import GluonProfile
+from gluon import Profile
 from gluon.deps import json
 from rdflib.graph import ConjunctiveGraph
 from rdflib.term import URIRef, Literal, BNode
@@ -20,7 +20,7 @@ class GluonParser(Parser):
 
 def to_rdf(tree, graph=None, profile_source=None):
     # TODO: determine profile from profile_source, or obj or ref in tree..
-    profile = GluonProfile(profile_source or tree.get('profile'))
+    profile = Profile(profile_source or tree.get('profile'))
     lang = tree.get('lang')
     base = tree.get('base')
     all_resources = _subject_data_pairs(tree.get('linked'),
@@ -39,6 +39,8 @@ def to_rdf(tree, graph=None, profile_source=None):
 def _populate_graph(state, subject, data):
     graph, profile, lang, base = state
     for p, os in data.items():
+        if p in ('$uri',):
+            continue
         pred_uri = profile.uri_for_key(p)
         pred = URIRef(pred_uri)
         add_obj = lambda obj: graph.add((subject, pred, obj))
@@ -83,6 +85,6 @@ def _subject_data_pairs(linked=None, *listed):
         if not l:
             continue
         for data in l:
-            yield data.pop("$uri", None), data
+            yield data.get('$uri'), data
 
 
