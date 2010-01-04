@@ -33,9 +33,9 @@
         <ex:value>next thing</ex:value>
     </rdf:Description>
 
-    <ex:Mystery rdf:about="http://example.org/example_001/mystery">
-        <rdf:type rdf:resource="http://example.org/ns#Riddle"/>
-        <ex:value>mystery</ex:value>
+    <ex:Mystery rdf:about="http://example.org/example_001/riddle">
+        <rdf:type rdf:resource="http://example.org/ns#Enigma"/>
+        <ex:value>riddle</ex:value>
         <ex:value rdf:datatype="http://example.org/other#custom">custom</ex:value>
     </ex:Mystery>
     <rdf:Description xml:lang="en">
