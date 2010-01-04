@@ -27,7 +27,7 @@ def to_tree(graph, profile=None, lang=None, base=None):
         token_for_uri = lambda uri: _qname(graph, uri)
     else:
         profile_data = profile.source
-        token_for_uri = lambda uri: profile.token_for_uri(uri) or _qname(graph, uri)
+        token_for_uri = lambda uri: profile.token_for_uri(text(uri)) or _qname(graph, uri)
 
     tree = {'profile': profile_data}
     if lang: tree['lang'] = lang
@@ -101,11 +101,11 @@ def _subject_to_data(state, s):
             obj = {}
             lang_many = False
             for o in os:
-                lang_key = '@'+o.language
-                if not isinstance(o, Literal):
+                if not isinstance(o, Literal) or not o.language:
                     obj = None
                     break
-                elif lang_key in obj:
+                lang_key = '@'+o.language
+                if lang_key in obj:
                     lang_many = True
                 v = repr_value(o)
                 if isinstance(v, dict):
@@ -117,10 +117,11 @@ def _subject_to_data(state, s):
                     else:
                         obj.update(v)
 
-        if not many:
-            obj = repr_value(os[0])
-        elif not obj:
-            obj = [repr_value(o) for o in os]
+        if not obj:
+            if not many:
+                obj = repr_value(os[0])
+            else:
+                obj = [repr_value(o) for o in os]
 
         current[p_key] = obj
 

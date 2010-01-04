@@ -3,6 +3,7 @@
 
 class Profile(object):
     def __init__(self, source=None):
+        source = source['profile'] if 'profile' in source else source
         self.source = source
         self.prefixes = source.get('prefix') or {}
         if 'default' in source:

@@ -47,6 +47,7 @@ def _populate_graph(state, subject, data):
         dfn = profile.definitions.get(pred_uri)
         if not isinstance(os, list):
             os = [os]
+        # TODO: check if datatype is JSON compatible (bool, int..)
         for o in os:
             if not isinstance(o, dict):
                 if dfn and dfn.localized:
@@ -60,6 +61,7 @@ def _populate_graph(state, subject, data):
                 else:
                     add_obj(Literal(o))
                     continue
+
             if any(k.startswith('@') for k in o):
                 for langkey, value in o.items():
                     values = value if isinstance(value, list) else [value]

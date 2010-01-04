@@ -1,0 +1,34 @@
+{
+    "profile": {
+        "prefix": {
+            "dct": "http://purl.org/dc/terms/",
+            "owl": "http://www.w3.org/2002/07/owl#",
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+            "xsd": "http://www.w3.org/2001/XMLSchema#"
+        },
+        "default": "dct",
+        "define": {
+            "a": {"term": "rdf:type", "symbol": true},
+            "created": {"datatype": "xsd:dateTime"},
+            "title": {"localized": true},
+            "alternative": {"many": true},
+            "source": {"reference": true, "many": false},
+            "Resource": {"from": "rdfs"},
+            "Thing": {"from": "owl"}
+        }
+    },
+    "lang": "en",
+    "linked": {
+        "http://example.org/item/1": {
+            "a": ["Resource", "Thing"],
+            "created": "2010-01-04T01:35:14Z",
+            "source": "http://example.org/source",
+            "title": "Example",
+            "alternative": ["ex."]
+        },
+        "http://example.org/source": {
+            "title": "Source"
+        }
+    }
+}
