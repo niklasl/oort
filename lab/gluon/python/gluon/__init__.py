@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 
-class GluonProfile(object):
+class Profile(object):
     def __init__(self, source=None):
         self.source = source
         self.prefixes = source.get('prefix') or {}
@@ -49,7 +49,7 @@ class GluonProfile(object):
 
     def token_for_uri(self, uri):
         token = self._uri_token_map.get(uri)
-        if not token and uri.startswith(self._default_ns):
+        if not token and self._default_ns and uri.startswith(self._default_ns):
             token = uri[len(self._default_ns):]
         return token
 

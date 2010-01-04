@@ -1,0 +1,13 @@
+{
+    "profile": {
+        "prefix": {
+            "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+        }
+    },
+    "resources": [
+        {
+            "$uri": "http://example.org/item/1",
+            "rdfs:label": "item_1"
+        }
+    ]
+}
