@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<graph xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ex="http://example.org/ns#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <resource>
+    <ex:value>bnode 1</ex:value>
+    <ex:rel>
+      <a><ex:Thing/></a>
+      <ex:value>bnode 2.1</ex:value>
+      <ex:value>bnode 2.2</ex:value>
+    </ex:rel>
+  </resource>
+</graph>

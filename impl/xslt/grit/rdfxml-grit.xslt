@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 
-    <!-- Last modified: 2009-12-21
+    <!-- Last modified: 2010-01-19
          Copyright: Niklas Lindström [lindstream@gmail.com]
          License: BSD-style -->
     <xsl:template name="_description">
@@ -16,7 +16,7 @@
             <dct:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date"
                          >2009-12-08</dct:created>
             <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date"
-                        >2009-12-21</dct:modified>
+                        >2010-01-19</dct:modified>
             <dct:license rdf:resource="http://usefulinc.com/doap/licenses/bsd"/>
             <foaf:primaryTopic rdf:resource="http://purl.org/oort/def/2009/grit"/>
             <dct:creator>
@@ -30,25 +30,40 @@
     </xsl:template>
 
     <!--
-    TODO:
-        - interpreted rdf:li, @rdf:_* (rdf:Seq, rdf:Bag, rdf:Alt)..
-        - non-sugared rdf:List..
+    TODO: BNodes:
+        - spread out bnodes are duplicated!
+
+        - add support for bnodes as multiple objects (thus needing names). Cater for it by
+           adding @ref="_:bnode{generate-id(key('bnode', @rdf:nodeID)[1])}" ..?
+
+    TODO: Redesign:
+        - datatype as just @dt="<curie>"? (Plus hard support for xsd?)
+            .. thus remove @fmt, and use <xml> for XMLLiteral..
+            .. or e.g. @fmt="datatype|dateTime|boolean|.." /(cherrypicked from xsd)
+
+    TODO: Less crucial:
 
         - @xml:base: to resolve about, resource and ID against
             - currently no or uniform use of relative uri:s is assumed
             - and crude special-casing of "#..." is done in final uri values
+            - see also <http://xsltsl.sourceforge.net/>
 
         - @rdf:ID: normalize with @rdf:about use ("concat($base, '#', @rdf:ID)")
             - currently assumes uses of ID are isolated
 
-    To improve:
+        - interpreted rdf:li, @rdf:_* (rdf:Seq, rdf:Bag, rdf:Alt)..
+        - handle non-sugared rdf:List..
+
+    Improve:
         - topresources algorithm.. (about and nodeID via //*, *[not(...)] top-level bnodes)
+        - optional support for $lang-filter (remove all lang literals with different lang)
 
     Unsupported by current design:
-        - named bnodes (@rdf:nodeID) in output (bnodes are inlined in rels)
+        - named bnodes (@rdf:nodeID) in output (bnodes are inlined in rels) (see opt. fix above)
     -->
 
     <xsl:param name="base" select="/*/@xml:base[position()=1]"/>
+    <xsl:param name="lang-filter"/>
 
     <xsl:variable name="all-namespaces" select="//*/namespace::*"/>
 
