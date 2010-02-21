@@ -1,6 +1,6 @@
 load("glue.js");
 
-var ctx = new Glue.Context();
+var ctx = new Glue.Context(/*profile, 'en'*/);
 ctx.locale('en'); // .., 'sv', .., any=false
 ctx.add(data); // add_new=true (but first dfn, token and pfx is *always* kept)
 var concept = ctx.find("http://id.loc.gov/authorities/sh95000541#concept");

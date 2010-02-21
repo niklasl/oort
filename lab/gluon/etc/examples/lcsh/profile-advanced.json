@@ -1,0 +1,33 @@
+{
+    // NOTE: this is a very experimental sketch
+    "prefix": {
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "skos": "http://www.w3.org/2004/02/skos/core#"
+    }
+    "default": "skos",
+    // global default overridden by (default in) match; disallow when using "where"?
+    "define": {
+        "a": {"term": "rdf:type", "symbol": true, "many": false},
+        "homepage": {"from": "foaf", "reference": true, "many": false},
+        //"Person": {"from": "foaf"},
+        "interest": {"from": "foaf", "reference": true}
+    }
+    "where": [
+        {
+            "match": {"a": "Concept"},
+            "default": "skos",
+            "define": {
+                "closeMatch": {"reference": true, "many": false}
+            }
+        },
+        {
+            //"match": {"a": "Person"},
+            "has": "interest",
+            "default": "foaf",
+            "define": {
+                "name": {"many": false}
+            }
+        }
+    ]
+}

@@ -31,9 +31,10 @@ def to_rdf(tree, graph=None, profile_source=None):
     for pfx, uri in profile.prefixes.items():
         graph.bind(pfx, uri)
 
+    state = graph, profile, lang, base
+
     for s, data in all_resources:
         subject = URIRef(s, base) if s else BNode()
-        state = graph, profile, lang, base
         _populate_graph(state, subject, data)
     return graph
 

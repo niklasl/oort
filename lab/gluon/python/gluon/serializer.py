@@ -19,12 +19,12 @@ class GluonSerializer(Serializer):
 
 
 class State(object):
-    def __init__(self, graph, profile, token_for_uri, lang, base):
+    def __init__(self, graph, profile, lang, base, token_for_uri):
         self.graph = graph
         self.profile = profile
-        self.token_for_uri = token_for_uri
         self.lang = lang
         self.base = base
+        self.token_for_uri = token_for_uri
 
 
 # TODO: reuse rdflib things, e.g. RecursiveSerializer, used-qname-checking..
@@ -32,7 +32,7 @@ def to_tree(graph, profile=None, lang=None, base=None):
 
     # FIXME: make sure to use/update prefixes for created curies!
     # .. that is, reasonably(?) create profile if none exists (from graph
-    # prefixes), and always only use token_for_uri (not _qname)..
+    # prefixes), and extend(?) token_for_uri to handle qnames (skip _qname)..
     # .. and also, check which prefixes are actually used..
     if not profile:
         prefixes = dict((pfx, text(ns))
@@ -49,12 +49,16 @@ def to_tree(graph, profile=None, lang=None, base=None):
     if base: tree['base'] = base
 
     # TODO: Switch to "resources" if configured or non-reffed bnodes occur?
-    # The 'resources' or 'linked'+(opt)'nodes' needs to be specified..
+    #   TODO: PROPOSAL: use a profile config for identifier key representation:
+    #       - "profile":{"identifier": ..., ...}
+    #       - AS_KEY (use linked), PFX:"$", PFX:"_"
+    #       - what about "reference":true vs. special "ref" (opt. prefixes as per above..)
+    # The "resources" or "linked"+(opt)"nodes" needs to be specified..
     linked = {}
     nodes = []
     use_linked_and_nodes = profile and profile.definitions
 
-    state = State(graph, profile, token_for_uri, lang, base)
+    state = State(graph, profile, lang, base, token_for_uri)
 
     for s in set(graph.subjects()):
         current = _subject_to_node(state, s)
