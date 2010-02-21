@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:ex="http://example.org/ns#">
+
+    <!-- spread out striped bnode with duplicate refs -->
+    <rdf:Description>
+        <ex:value>bnode 1</ex:value>
+        <ex:rel>
+            <ex:Thing rdf:nodeID="bnode_2">
+                <ex:value>bnode 2.1</ex:value>
+            </ex:Thing>
+        </ex:rel>
+        <ex:rel rdf:nodeID="bnode_2"/>
+    </rdf:Description>
+    <rdf:Description rdf:nodeID="bnode_2">
+        <ex:value>bnode 2.2</ex:value>
+    </rdf:Description>
+
+</rdf:RDF>
