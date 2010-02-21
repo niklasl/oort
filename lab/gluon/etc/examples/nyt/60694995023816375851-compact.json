@@ -1,0 +1,90 @@
+{
+  "profile": {
+    "prefix": {
+      "dc": "http://purl.org/dc/elements/1.1/",
+      "time": "http://www.w3.org/2006/time#",
+      "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+      "foaf": "http://xmlns.com/foaf/0.1/",
+      "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      "owl": "http://www.w3.org/2002/07/owl#",
+      "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "nyt": "http://data.nytimes.com/elements/",
+      "geonames": "http://www.geonames.org/ontology#",
+      "skos": "http://www.w3.org/2004/02/skos/core#",
+      "cc": "http://creativecommons.org/ns#",
+      "fb": "http://rdf.freebase.com/ns/",
+      "dcterms": "http://purl.org/dc/terms/"
+    },
+    "default": "nyt",
+    "define": {
+        "a": {"term": "rdf:type", "symbol": true, "many": false},
+        "created": {"from": "dcterms", "datatype": "xsd:date"},
+        "modified": {"from": "dcterms", "datatype": "xsd:date"},
+        "first_use": {"from": "nyt", "datatype": "xsd:date"},
+        "latest_use": {"from": "nyt", "datatype": "xsd:date"},
+        "attributionName": {"from": "cc", "localized": true},
+        "creator": {"from": "dc", "localized": true},
+        "rightsHolder": {"from": "dcterms", "localized": true},
+        "prefLabel": {"from": "skos", "localized": true},
+        "mapping_strategy": {"reference": true, "many": false},
+        "primaryTopic": {"from": "foaf", "reference": true},
+        "attributionURL": {"from": "cc", "reference": true},
+        "license": {"from": "cc", "reference": true},
+        "sameAs": {"from": "owl", "reference": true},
+        "inScheme": {"from": "skos", "reference": true, "many": false},
+        "name": {"from": "geonames", "localized": true},
+        "featureClass": {"from": "geonames", "reference": true},
+        "nearbyFeatures": {"from": "geonames", "reference": true},
+        "parentFeature": {"from": "geonames", "reference": true},
+        "inCountry": {"from": "geonames", "reference": true},
+        "featureCode": {"from": "geonames", "reference": true},
+        "locationMap": {"from": "geonames", "reference": true},
+        "Feature": {"from": "geonames"},
+        "Concept": {"from": "skos"}
+    }
+  },
+  "lang": "en",
+  "linked": {
+    "http://data.nytimes.com/60694995023816375851.rdf": {
+      "attributionName": "The New York Times Company",
+      "creator": "The New York Times Company",
+      "mapping_strategy": "http://data.nytimes.com/elements/manual",
+      "attributionURL": ["http://data.nytimes.com/60694995023816375851"],
+      "modified": "2010-01-12",
+      "primaryTopic": ["http://data.nytimes.com/60694995023816375851"],
+      "created": "2009-11-11",
+      "rightsHolder": "The New York Times Company",
+      "license": ["http://creativecommons.org/licenses/by/3.0/us/"]
+    },
+    "http://sws.geonames.org/5130561/": {
+      "a": "Feature",
+      "featureClass": ["http://www.geonames.org/ontology#P"],
+      "nearbyFeatures": ["http://sws.geonames.org/5130561/nearby.rdf"],
+      "lat": 40.6701033,
+      "long": -73.9859723,
+      "parentFeature": ["http://sws.geonames.org/6332449/"],
+      "inCountry": ["http://www.geonames.org/countries/#US"],
+      "name": "Park Slope",
+      "featureCode": ["http://www.geonames.org/ontology#P.PPLX"],
+      "locationMap": ["http://www.geonames.org/5130561/park-slope.html"]
+    },
+    "http://data.nytimes.com/60694995023816375851": {
+      "a": "Concept",
+      "inScheme": "http://data.nytimes.com/elements/nytd_geo",
+      "lat": 40.6701033,
+      "long": -73.9859723,
+      "number_of_variants": 1,
+      "first_use": "2007-07-08",
+      "associated_article_count": 54,
+      "search_api_query": [{"$ref": "http://api.nytimes.com/svc/search/v1/article?query=+nytd_geo_facet%3A%5BPark+Slope+%28NYC%29%5D&rank=newest&fields=abstract,author,body,byline,classifiers_facet,column_facet,date,day_of_week_facet,des_facet,desk_facet,fee,geo_facet,lead_paragraph,material_type_facet,multimedia,nytd_byline,nytd_des_facet,nytd_geo_facet,nytd_lead_paragraph,nytd_org_facet,nytd_per_facet,nytd_section_facet,nytd_title,nytd_works_mentioned_facet,org_facet,page_facet,per_facet,publication_day,publication_month,publication_year,section_page_facet,small_image_height,small_image_url,small_image_width,source_facet,title,url,word_count,works_mentioned_facet"}],
+      "latest_use": "2009-10-25",
+      "prefLabel": "Park Slope (NYC)",
+      "sameAs": [
+        "http://dbpedia.org/resource/Park_Slope%2C_Brooklyn",
+        "http://sws.geonames.org/5130561/",
+        "http://data.nytimes.com/park_slope_nyc_geo",
+        "http://rdf.freebase.com/ns/en.park_slope_brooklyn"
+      ]
+    }
+  }
+}

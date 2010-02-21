@@ -1,0 +1,54 @@
+{
+  "profile": {
+    "prefix": {
+      "dc": "http://purl.org/dc/elements/1.1/",
+      "time": "http://www.w3.org/2006/time#",
+      "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+      "foaf": "http://xmlns.com/foaf/0.1/",
+      "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      "owl": "http://www.w3.org/2002/07/owl#",
+      "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "nyt": "http://data.nytimes.com/elements/",
+      "geonames": "http://www.geonames.org/ontology#",
+      "skos": "http://www.w3.org/2004/02/skos/core#",
+      "cc": "http://creativecommons.org/ns#",
+      "fb": "http://rdf.freebase.com/ns/",
+      "dcterms": "http://purl.org/dc/terms/"
+    },
+    "default": "nyt",
+    "define": {
+        "a": {"term": "rdf:type", "symbol": true, "many": false},
+        "created": {"from": "dcterms", "datatype": "xsd:date"},
+        "modified": {"from": "dcterms", "datatype": "xsd:date"},
+        "first_use": {"from": "nyt", "datatype": "xsd:date"},
+        "latest_use": {"from": "nyt", "datatype": "xsd:date"},
+        "attributionName": {"from": "cc", "localized": true},
+        "creator": {"from": "dc", "localized": true},
+        "rightsHolder": {"from": "dcterms", "localized": true},
+        "prefLabel": {"from": "skos", "localized": true},
+        "mapping_strategy": {"reference": true, "many": false},
+        "primaryTopic": {"from": "foaf", "reference": true},
+        "attributionURL": {"from": "cc", "reference": true},
+        "license": {"from": "cc", "reference": true},
+        "sameAs": {"from": "owl", "reference": true},
+        "inScheme": {"from": "skos", "reference": true, "many": false},
+        "Feature": {"from": "geonames"},
+        "Concept": {"from": "skos"}
+    },
+    "where": [
+        {
+          "match": {"a": "Feature"},
+          "default": "geonames",
+          "define": {
+            "name": {"localized": true},
+            "featureClass": {"reference": true},
+            "nearbyFeatures": {"reference": true},
+            "parentFeature": {"reference": true},
+            "inCountry": {"reference": true},
+            "featureCode": {"reference": true},
+            "locationMap": {"reference": true},
+          }
+        }
+    ]
+  }
+}

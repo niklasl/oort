@@ -1,0 +1,50 @@
+# FIXME:
+# - geo:long and geo:lat values change type in translation
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix geonames: <http://www.geonames.org/ontology#> .
+@prefix nyt: <http://data.nytimes.com/elements/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://data.nytimes.com/60694995023816375851.rdf> cc:attributionName "The New York Times Company"@en;
+    cc:attributionURL <http://data.nytimes.com/60694995023816375851>;
+    cc:license <http://creativecommons.org/licenses/by/3.0/us/>;
+    nyt:mapping_strategy nyt:manual;
+    dc:creator "The New York Times Company"@en;
+    dcterms:created "2009-11-11"^^xsd:date;
+    dcterms:modified "2010-01-12"^^xsd:date;
+    dcterms:rightsHolder "The New York Times Company"@en;
+    foaf:primaryTopic <http://data.nytimes.com/60694995023816375851> .
+
+<http://sws.geonames.org/5130561/> a geonames:Feature;
+    geonames:featureClass geonames:P;
+    geonames:featureCode <http://www.geonames.org/ontology#P.PPLX>;
+    geonames:inCountry <http://www.geonames.org/countries/#US>;
+    geonames:locationMap <http://www.geonames.org/5130561/park-slope.html>;
+    geonames:name "Park Slope"@en;
+    geonames:nearbyFeatures <http://sws.geonames.org/5130561/nearby.rdf>;
+    geonames:parentFeature <http://sws.geonames.org/6332449/>;
+    geo:lat 40.6701033;
+    geo:long -73.9859723 .
+
+<http://data.nytimes.com/60694995023816375851> a skos:Concept;
+    nyt:associated_article_count 54;
+    nyt:first_use "2007-07-08"^^xsd:date;
+    nyt:latest_use "2009-10-25"^^xsd:date;
+    nyt:number_of_variants 1;
+    nyt:search_api_query <http://api.nytimes.com/svc/search/v1/article?query=+nytd_geo_facet%3A%5BPark+Slope+%28NYC%29%5D&rank=newest&fields=abstract,author,body,byline,classifiers_facet,column_facet,date,day_of_week_facet,des_facet,desk_facet,fee,geo_facet,lead_paragraph,material_type_facet,multimedia,nytd_byline,nytd_des_facet,nytd_geo_facet,nytd_lead_paragraph,nytd_org_facet,nytd_per_facet,nytd_section_facet,nytd_title,nytd_works_mentioned_facet,org_facet,page_facet,per_facet,publication_day,publication_month,publication_year,section_page_facet,small_image_height,small_image_url,small_image_width,source_facet,title,url,word_count,works_mentioned_facet>;
+    = <http://data.nytimes.com/park_slope_nyc_geo>,
+        <http://dbpedia.org/resource/Park_Slope%2C_Brooklyn>,
+        <http://rdf.freebase.com/ns/en.park_slope_brooklyn>,
+        <http://sws.geonames.org/5130561/>;
+    geo:lat 40.6701033;
+    geo:long -73.9859723;
+    skos:inScheme nyt:nytd_geo;
+    skos:prefLabel "Park Slope (NYC)"@en .
+

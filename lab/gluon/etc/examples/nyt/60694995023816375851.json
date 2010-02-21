@@ -1,0 +1,66 @@
+{
+  "profile": {
+    "prefix": {
+      "dc": "http://purl.org/dc/elements/1.1/",
+      "time": "http://www.w3.org/2006/time#",
+      "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+      "foaf": "http://xmlns.com/foaf/0.1/",
+      "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      "owl": "http://www.w3.org/2002/07/owl#",
+      "xsd": "http://www.w3.org/2001/XMLSchema#",
+      "nyt": "http://data.nytimes.com/elements/",
+      "geonames": "http://www.geonames.org/ontology#",
+      "skos": "http://www.w3.org/2004/02/skos/core#",
+      "cc": "http://creativecommons.org/ns#",
+      "fb": "http://rdf.freebase.com/ns/",
+      "dcterms": "http://purl.org/dc/terms/"
+    }
+  },
+  "resources": [
+    {
+      "$uri": "http://data.nytimes.com/60694995023816375851.rdf",
+      "cc:attributionName": {"@en": "The New York Times Company"},
+      "dc:creator": {"@en": "The New York Times Company"},
+      "nyt:mapping_strategy": [{"$ref": "http://data.nytimes.com/elements/manual"}],
+      "cc:attributionURL": [{"$ref": "http://data.nytimes.com/60694995023816375851"}],
+      "dcterms:modified": {"$value": "2010-01-12", "$datatype": "xsd:date"},
+      "foaf:primaryTopic": [{"$ref": "http://data.nytimes.com/60694995023816375851"}],
+      "dcterms:created": {"$value": "2009-11-11", "$datatype": "xsd:date"},
+      "dcterms:rightsHolder": {"@en": "The New York Times Company"},
+      "cc:license": [{"$ref": "http://creativecommons.org/licenses/by/3.0/us/"}]
+    },
+    {
+      "$uri": "http://sws.geonames.org/5130561/",
+      "geonames:featureClass": [{"$ref": "http://www.geonames.org/ontology#P"}],
+      "geonames:nearbyFeatures": [{"$ref": "http://sws.geonames.org/5130561/nearby.rdf"}],
+      "geo:long": -73.9859723,
+      "geo:lat": 40.6701033,
+      "geonames:parentFeature": [{"$ref": "http://sws.geonames.org/6332449/"}],
+      "geonames:inCountry": [{"$ref": "http://www.geonames.org/countries/#US"}],
+      "rdf:type": [{"$ref": "http://www.geonames.org/ontology#Feature"}],
+      "geonames:name": {"@en": "Park Slope"},
+      "geonames:featureCode": [{"$ref": "http://www.geonames.org/ontology#P.PPLX"}],
+      "geonames:locationMap": [{"$ref": "http://www.geonames.org/5130561/park-slope.html"}]
+    },
+    {
+      "$uri": "http://data.nytimes.com/60694995023816375851",
+      "geo:lat": 40.6701033,
+      "geo:long": -73.9859723,
+      "skos:inScheme": [{"$ref": "http://data.nytimes.com/elements/nytd_geo"}],
+      "nyt:number_of_variants": 1,
+      "nyt:first_use": {"$value": "2007-07-08", "$datatype": "xsd:date"},
+      "nyt:associated_article_count": 54,
+      "rdf:type": [{"$ref": "http://www.w3.org/2004/02/skos/core#Concept"}],
+      "nyt:search_api_query": [{"$ref": "http://api.nytimes.com/svc/search/v1/article?query=+nytd_geo_facet%3A%5BPark+Slope+%28NYC%29%5D&rank=newest&fields=abstract,author,body,byline,classifiers_facet,column_facet,date,day_of_week_facet,des_facet,desk_facet,fee,geo_facet,lead_paragraph,material_type_facet,multimedia,nytd_byline,nytd_des_facet,nytd_geo_facet,nytd_lead_paragraph,nytd_org_facet,nytd_per_facet,nytd_section_facet,nytd_title,nytd_works_mentioned_facet,org_facet,page_facet,per_facet,publication_day,publication_month,publication_year,section_page_facet,small_image_height,small_image_url,small_image_width,source_facet,title,url,word_count,works_mentioned_facet"}],
+      "nyt:latest_use": {"$value": "2009-10-25", "$datatype": "xsd:date"},
+      "skos:prefLabel": {"@en": "Park Slope (NYC)"},
+      "owl:sameAs": [
+        {"$ref": "http://dbpedia.org/resource/Park_Slope%2C_Brooklyn"},
+        {"$ref": "http://sws.geonames.org/5130561/"},
+        {"$ref": "http://data.nytimes.com/park_slope_nyc_geo"},
+        {"$ref": "http://rdf.freebase.com/ns/en.park_slope_brooklyn"}
+      ]
+    }
+  ]
+}
+
