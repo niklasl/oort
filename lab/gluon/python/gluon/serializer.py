@@ -1,13 +1,13 @@
 # -*- coding: UTF-8 -*-
-from rdflib.syntax.serializers import Serializer
-from rdflib.namespace import RDF, _XSD_NS
+from rdflib.serializer import Serializer
+from rdflib.namespace import RDF, XSD
 from gluon import Profile
 from gluon.deps import json
 from rdflib.term import URIRef, Literal, BNode
 
 
 PLAIN_LITERAL_TYPES = set(
-        [_XSD_NS.integer, _XSD_NS.float, _XSD_NS.boolean])
+        [XSD.integer, XSD.float, XSD.boolean])
 
 
 class GluonSerializer(Serializer):

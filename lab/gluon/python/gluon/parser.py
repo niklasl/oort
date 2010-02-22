@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from __future__ import with_statement
 from contextlib import closing
-from rdflib.syntax.parsers import Parser
+from rdflib.parser import Parser
 from rdflib.namespace import RDF
 from gluon import Profile
 from gluon.deps import json
