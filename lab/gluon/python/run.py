@@ -20,7 +20,7 @@ if __name__ == '__main__':
         print graph.serialize(format="n3")
     else:
         graph = ConjunctiveGraph()
-        from rdflib_tools.pathutils import guess_format
+        from rdfextras.tools.pathutils import guess_format
         graph.parse(fname, format=guess_format(fname))
         profile = Profile(json.load(open(profile_fname))
                 ) if profile_fname else None
