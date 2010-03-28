@@ -2,6 +2,15 @@ from os import path as p
 from glob import glob
 from StringIO import StringIO
 from lxml import etree
+try:
+    from rdflib import ConjunctiveGraph
+    from rdflib.compare import to_isomorphic, graph_diff
+    def isograph(doc):
+        g = ConjunctiveGraph().parse(data=etree.tostring(doc))
+        return to_isomorphic(g)
+except ImportError:
+    isograph = None
+
 
 _herepath = lambda *parts: p.normpath(p.join(p.dirname(__file__), *parts))
 
@@ -22,9 +31,18 @@ def run_grit_test(rdfxml_fpath, grit_fpath):
     assert canonical_str(actual_grit) == canonical_str(speced_grit), \
             "Grit from <%s> doesn't equal specified result in <%s>" % (
                     rdfxml_fpath, grit_fpath)
-    #gleaned_rdf = GRDDL_XSLT(speced_grit)
-    #assert canonical_str(gleaned_rdf) == canonical_str(rdfxml), \
-    #        "RDF from GRDDL:ed <%s> doesn't equal original RDF." % (grit_fpath)
+    if not isograph:
+        return
+    gleaned_rdf = GRDDL_XSLT(speced_grit)
+    gleaned_graph = isograph(gleaned_rdf)
+    ref_graph = isograph(rdfxml)
+    diff = lambda: "\nOnly in gleaned:%s\nOnly in spec:%s\n" % tuple(
+                 "\n".join(
+                    sorted(g.serialize(format='nt').splitlines()) )
+                for g in graph_diff(gleaned_graph, ref_graph)[1:] )
+    assert gleaned_graph == ref_graph, \
+            "RDF from GRDDL:ed <%s> doesn't equal original RDF. Diff: %s" % (
+                    grit_fpath, diff())
 
 def file_pairs(testdir=None):
     testdir = testdir or _herepath('..','..','etc','grit','examples')

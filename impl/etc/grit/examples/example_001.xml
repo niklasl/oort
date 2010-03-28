@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
-<graph xmlns:ex="http://example.org/ns#"
-       xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<graph xmlns:ex="http://example.org/ns#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <resource uri="http://example.org/example_001">
     <a>
       <ex:Thing/>

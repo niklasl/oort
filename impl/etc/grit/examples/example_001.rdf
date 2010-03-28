@@ -7,7 +7,7 @@
         <ex:value>plain 1</ex:value>
         <ex:value xml:lang="en">English 1</ex:value>
         <ex:value rdf:datatype="http://www.w3.org/2001/XMLSchema#string">datatyped 1</ex:value>
-        <ex:value rdf:parseType="XMLLiteral"><anyXml>datatyped 2</anyXml></ex:value>
+        <ex:value rdf:parseType="Literal"><anyXml>datatyped 2</anyXml></ex:value>
         <ex:rel rdf:resource="http://example.org/example_001/otherthing"/>
         <ex:rel rdf:parseType="Resource">
             <rdf:type rdf:resource="http://example.org/ns#Anonymous"/>
