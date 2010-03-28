@@ -3,10 +3,10 @@
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 
     <!--
-    Title: Grit to RDF/XML GRDDL
-    Last modified: 2010-03-27
-    Copyright: Niklas Lindström [lindstream@gmail.com]
-    License: BSD-style
+        Title: Grit XML to RDF/XML GRDDL
+        Last modified: 2010-03-28
+        Copyright: Niklas Lindström <lindstream@gmail.com>
+        License: BSD-style
     -->
 
     <xsl:param name="base" select="/*/@xml:base[position()=1]"/>
