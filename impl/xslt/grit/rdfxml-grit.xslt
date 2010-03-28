@@ -36,8 +36,7 @@
     <!-- TODO:
 
     * Design Issues:
-        - evaluate the usefulness of current @fmt solution
-        - rename root element to <data>?
+        - evaluate the usefulness of current solution for datatyped literals (@fmt)
 
     * Less important:
 
@@ -141,8 +140,11 @@
                             $first-named-bnode and not($atroot and
                                     (../*//*[@rdf:nodeID = current()/@rdf:nodeID])
                                     )"/>
-                    <xsl:if test="$true-blank or ($first-spread-bnode and
-                             (($ref-count = 0 and $atroot) or $ref-count > 1))">
+                    <xsl:variable name="selfref"
+                                  select=".//*[@rdf:nodeID = current()/@rdf:nodeID]"/>
+                    <xsl:if test="$true-blank or ($first-named-bnode and $selfref) or
+                             ($first-spread-bnode and
+                                (($ref-count = 0 and $atroot) or $ref-count > 1))">
                         <resource>
                             <xsl:if test="$ref-count > 0">
                                 <xsl:attribute name="uri">
@@ -252,8 +254,10 @@
     <xsl:template name="output-bnode-in-property">
         <xsl:variable name="ref-count" select="count(key('bnoderef', @rdf:nodeID))"/>
         <xsl:variable name="thisNode" select="."/>
+        <xsl:variable name="selfref"
+                      select="ancestor::*[@rdf:nodeID = current()/@rdf:nodeID]"/>
         <xsl:choose>
-            <xsl:when test="$ref-count &lt; 2">
+            <xsl:when test="$ref-count &lt; 2 and not($selfref)">
                 <xsl:for-each select="key('bnode', @rdf:nodeID)">
                     <xsl:if test=". != $thisNode">
                         <xsl:call-template name="resourcebody"/>
