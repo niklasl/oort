@@ -52,11 +52,15 @@
     </xsl:template>
 
     <xsl:template match="@uri">
-        <xsl:attribute name="rdf:about"><xsl:value-of select="."/></xsl:attribute>
+        <xsl:call-template name="uri-or-nodeid">
+            <xsl:with-param name="attr-name" select="'rdf:about'"/>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="@ref">
-        <xsl:attribute name="rdf:resource"><xsl:value-of select="."/></xsl:attribute>
+        <xsl:call-template name="uri-or-nodeid">
+            <xsl:with-param name="attr-name" select="'rdf:resource'"/>
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="*">
@@ -71,6 +75,22 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:copy>
+    </xsl:template>
+
+    <xsl:template name="uri-or-nodeid">
+        <xsl:param name="attr-name"/>
+        <xsl:choose>
+            <xsl:when test="starts-with(., '_:')">
+                <xsl:attribute name="rdf:nodeID">
+                    <xsl:value-of select="substring-after(., '_:')"/>
+                </xsl:attribute>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:attribute name="{$attr-name}">
+                    <xsl:value-of select="."/>
+                </xsl:attribute>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 </xsl:stylesheet>
