@@ -1,11 +1,16 @@
 <?xml version="1.0"?>
-<graph xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:ex="http://example.org/ns#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+<graph xmlns:ex="http://example.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <resource>
     <ex:value>bnode 1</ex:value>
-    <ex:rel>
-      <a><ex:Thing/></a>
-      <ex:value>bnode 2.1</ex:value>
-      <ex:value>bnode 2.2</ex:value>
-    </ex:rel>
+    <ex:rel ref="_:bnode_2"/>
+    <ex:rel2 ref="_:bnode_2"/>
+  </resource>
+  <resource uri="_:bnode_2">
+    <a>
+      <ex:Thing/>
+    </a>
+    <ex:value>bnode 2.1</ex:value>
+    <ex:value>bnode 2.2</ex:value>
+    <ex:self ref="_:bnode_2"/>
   </resource>
 </graph>

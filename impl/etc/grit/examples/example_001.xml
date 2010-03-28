@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
-<graph xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-       xmlns:ex="http://example.org/ns#"
-       xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
-
+<graph xmlns:ex="http://example.org/ns#"
+       xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <resource uri="http://example.org/example_001">
-    <a><ex:Thing/></a>
+    <a>
+      <ex:Thing/>
+    </a>
     <ex:value>plain 1</ex:value>
     <ex:value xml:lang="en">English 1</ex:value>
     <ex:value fmt="datatype">
@@ -15,7 +16,9 @@
     </ex:value>
     <ex:rel ref="http://example.org/example_001/otherthing"/>
     <ex:rel>
-      <a><ex:Anonymous/></a>
+      <a>
+        <ex:Anonymous/>
+      </a>
       <ex:value>anonymous 1</ex:value>
     </ex:rel>
     <ex:list>
@@ -30,34 +33,40 @@
       <li ref="http://example.net/elsewhere"/>
     </ex:list>
   </resource>
-
   <resource uri="http://example.org/striped">
-    <a><ex:Striped/></a>
+    <a>
+      <ex:Striped/>
+    </a>
   </resource>
-
   <resource uri="http://example.org/example_001/otherthing">
-    <a><ex:Other/></a>
-    <a><Special xmlns="http://example.org/ns2/"/></a>
-    <a><Tag xmlns="tag:example.org,2009:ns:"/></a>
+    <a>
+      <ex:Other/>
+    </a>
+    <a>
+      <Special xmlns="http://example.org/ns2/"/>
+    </a>
+    <a>
+      <Tag xmlns="tag:example.org,2009:ns:"/>
+    </a>
     <ex:value>otherthing</ex:value>
   </resource>
-
   <resource uri="http://example.org/example_001/nextthing">
     <ex:value>next thing</ex:value>
   </resource>
-
   <resource uri="http://example.org/example_001/riddle">
-    <a><ex:Mystery/></a>
-    <a><ex:Enigma/></a>
+    <a>
+      <ex:Mystery/>
+    </a>
+    <a>
+      <ex:Enigma/>
+    </a>
     <ex:value>riddle</ex:value>
     <ex:value fmt="datatype">
       <custom xmlns="http://example.org/other#">custom</custom>
     </ex:value>
   </resource>
-
   <resource>
     <ex:value>plain 2</ex:value>
     <ex:value xml:lang="en">English 2</ex:value>
   </resource>
-
 </graph>
