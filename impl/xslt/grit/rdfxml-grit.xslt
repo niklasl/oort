@@ -162,7 +162,7 @@
 
             <xsl:call-template name="topresources">
                 <xsl:with-param name="descriptions"
-                                select="*[not(@rdf:parseType='XMLLiteral')]/*[@rdf:about | *]"/>
+                                select="*[not(@rdf:parseType='Literal')]/*[@rdf:about | *]"/>
             </xsl:call-template>
 
         </xsl:for-each>
@@ -216,7 +216,7 @@
                     <xsl:apply-templates mode="type" select="rdf:type"/>
                     <xsl:apply-templates mode="property" select="*|@*"/>
                 </xsl:when>
-                <xsl:when test="@rdf:parseType='XMLLiteral'">
+                <xsl:when test="@rdf:parseType='Literal'">
                     <xsl:attribute name="fmt">xml</xsl:attribute>
                     <xsl:copy-of select="node()"/>
                 </xsl:when>
@@ -374,7 +374,15 @@
                 <xsl:value-of select="$base"/>
             </xsl:when>
             <xsl:when test="starts-with($uri, '#')">
-                <xsl:value-of select="concat($base, $uri)"/>
+                <xsl:choose>
+                    <xsl:when test="contains($base, '#')">
+                        <xsl:value-of select="substring-before($base, '#')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$base"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:value-of select="$uri"/>
             </xsl:when>
             <!-- overly careful "is relative" check -->
             <xsl:when test="not(contains($uri, ':')) and not(contains($uri, '/'))">

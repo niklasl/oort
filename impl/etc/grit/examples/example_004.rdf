@@ -4,12 +4,12 @@
          xmlns:owl="http://www.w3.org/2002/07/owl#"
          xml:base="http://example.org/ns#">
 
-    <owl:ObjectProperty rdf:about="part">
+    <owl:ObjectProperty rdf:about="#part">
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="Document"/>
-                    <owl:Class rdf:about="Collection">
+                    <rdf:Description rdf:about="#Document"/>
+                    <owl:Class rdf:about="#Collection">
                         <rdfs:label xml:lang="en">Collection</rdfs:label>
                     </owl:Class>
                 </owl:unionOf>
@@ -17,7 +17,7 @@
         </rdfs:domain>
     </owl:ObjectProperty>
 
-    <owl:Class rdf:about="Document">
+    <owl:Class rdf:about="#Document">
         <rdfs:label xml:lang="en">Document</rdfs:label>
     </owl:Class>
 
