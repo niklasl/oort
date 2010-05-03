@@ -61,22 +61,19 @@
   <xsl:template match="*[a/owl:Ontology]">
       <div class="vocab">
         <h1><xsl:apply-templates mode="label" select="."/></h1>
-        <dl class="summary">
-          <dt>Namespace URI</dt>
-          <dd><code><xsl:value-of select="@uri"/></code></dd>
-          <xsl:for-each select="*">
-            <xsl:sort select="name()"/>
-            <xsl:sort select="@ref"/>
-            <xsl:apply-templates mode="summary" select="."/>
-          </xsl:for-each>
-        </dl>
+        <xsl:call-template name="summary">
+          <xsl:with-param name="pre">
+            <dt>Namespace URI</dt>
+            <dd><code><xsl:value-of select="@uri"/></code></dd>
+          </xsl:with-param>
+        </xsl:call-template>
 
         <xsl:variable name="defs" select="$r[rdfs:isDefinedBy/@ref=current()/@uri]"/>
         <xsl:variable name="classes" select="$defs[a/*[contains(local-name(), 'Class')]]"/>
         <xsl:variable name="properties" select="$defs[a/*[contains(local-name(), 'Property')]]"/>
         <h2>Contents</h2>
         <dl class="contents">
-          <dt><a href="#classes">Classes</a></dt>
+          <dt><a class="tool" href="#classes">Classes</a></dt>
           <dd>
             <ul>
               <xsl:for-each select="$classes">
@@ -87,7 +84,7 @@
               </xsl:for-each>
             </ul>
           </dd>
-          <dt><a href="#properties">Properties</a></dt>
+          <dt><a class="tool" href="#properties">Properties</a></dt>
           <dd>
             <ul>
               <xsl:for-each select="$properties">
@@ -177,35 +174,74 @@
     </div>
   </xsl:template>
 
-  <xsl:template mode="def" match="*">
+  <xsl:template mode="def" match="*[a/*[contains(local-name(), 'Class')]]">
+    <xsl:call-template name="def">
+      <xsl:with-param name="htclass">def class</xsl:with-param>
+      <xsl:with-param name="content">
+        <dl class="usage">
+          <xsl:variable name="subclasses" select="$r[rdfs:subClassOf/@ref = current()/@uri]"/>
+          <xsl:if test="$subclasses">
+            <dt>Has subclasses:</dt>
+            <dd>
+              <xsl:for-each select="$subclasses">
+                <xsl:if test="position() != 1">, </xsl:if>
+                <xsl:apply-templates mode="ref" select="."/>
+              </xsl:for-each>
+            </dd>
+          </xsl:if>
+          <xsl:variable name="domainof" select="$r[rdfs:domain/@ref = current()/@uri]"/>
+          <xsl:if test="$domainof">
+            <dt>Domain of:</dt>
+            <dd>
+              <xsl:for-each select="$domainof">
+                <xsl:if test="position() != 1">, </xsl:if>
+                <xsl:apply-templates mode="ref" select="."/>
+              </xsl:for-each>
+            </dd>
+          </xsl:if>
+          <xsl:variable name="rangeof" select="$r[rdfs:range/@ref = current()/@uri]"/>
+          <xsl:if test="$rangeof">
+            <dt>In range of:</dt>
+            <dd>
+              <xsl:for-each select="$rangeof">
+                <xsl:if test="position() != 1">, </xsl:if>
+                <xsl:apply-templates mode="ref" select="."/>
+              </xsl:for-each>
+            </dd>
+          </xsl:if>
+        </dl>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template mode="def" match="*[a/*[contains(local-name(), 'Property')]]">
+    <xsl:call-template name="def">
+      <xsl:with-param name="htclass">def class</xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="def">
+    <xsl:param name="htclass"/>
+    <xsl:param name="content"/>
     <xsl:variable name="term" select="gr:term(@uri)"/>
-    <div class="def" id="{$term}">
+    <div class="{$htclass}" id="{$term}">
       <h3>
         <xsl:apply-templates select="rdfs:label"/>
       </h3>
       <p>
         <xsl:apply-templates select="rdfs:comment"/>
       </p>
-      <dl class="summary">
-        <dt>URI</dt>
-        <dd>
-          <a href="{@uri}">
-            <code><xsl:value-of select="@uri"/></code>
-          </a>
-        </dd>
-        <xsl:apply-templates mode="summary" select="*"/>
-      </dl>
-      <dl class="usage">
-        <!-- TODO -->
-        <dt>Properties include:</dt>
-        <dd></dd>
-        <dt>Used with:</dt>
-        <dd></dd>
-        <dt>Has subclasses:</dt>
-        <dd></dd>
-        <dt>Disjoint with:</dt>
-        <dd></dd>
-      </dl>
+      <xsl:call-template name="summary">
+        <xsl:with-param name="pre">
+          <dt>URI</dt>
+          <dd>
+            <a href="{@uri}">
+              <code><xsl:value-of select="@uri"/></code>
+            </a>
+          </dd>
+        </xsl:with-param>
+      </xsl:call-template>
+      <xsl:copy-of select="$content"/>
       <div class="footer">
         <a class="tool" href="#{$term}">[#]</a>
         <a class="tool" href="#main">[top]</a>
@@ -213,6 +249,20 @@
     </div>
   </xsl:template>
 
+  <xsl:template name="summary">
+    <xsl:param name="pre"/>
+    <xsl:param name="post"/>
+    <dl class="summary">
+      <xsl:copy-of select="$pre"/>
+      <xsl:for-each select="*">
+        <xsl:sort select="name()"/>
+        <xsl:sort select="not(@ref)"/>
+        <xsl:sort select="@ref"/>
+        <xsl:apply-templates mode="summary" select="."/>
+      </xsl:for-each>
+      <xsl:copy-of select="$post"/>
+    </dl>
+  </xsl:template>
 
   <xsl:template mode="label" match="*[a/owl:Ontology]">
       <xsl:apply-templates select="dct:title | dcelem:title | rdfs:label"/>
@@ -225,7 +275,16 @@
   </xsl:template>
 
   <xsl:template match="*[@ref]" priority="-1">
-    <code><xsl:value-of select="@ref"/></code>
+    <xsl:variable name="it" select="gr:get(.)"/>
+    <xsl:choose>
+      <!-- TODO: looser than "in chosen vocab"?  -->
+      <xsl:when test="$it/rdfs:isDefinedBy/@ref = $vocab/@uri">
+        <xsl:apply-templates mode="ref" select="$it"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <code><xsl:value-of select="@ref"/></code>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="*[@xml:lang]">
@@ -246,9 +305,11 @@
   </xsl:template>
 
   <xsl:template name="meta-ref">
+    <!--
     <a href="{gr:name-to-uri(.)}">
-      <code><xsl:value-of select="name(.)"/></code>
     </a>
+    -->
+    <code><xsl:value-of select="name(.)"/></code>
   </xsl:template>
 
 
@@ -292,7 +353,16 @@
       <xsl:call-template name="meta-ref"/>
     </dt>
     <dd>
-      <xsl:apply-templates select="."/>
+      <xsl:choose>
+        <xsl:when test="* and not(@fmt)">
+          <dl>
+            <xsl:apply-templates mode="summary" select="*"/>
+          </dl>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="."/>
+        </xsl:otherwise>
+      </xsl:choose>
     </dd>
   </xsl:template>
 

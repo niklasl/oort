@@ -11,7 +11,7 @@ h1, h2, h3, h4, h5, h6 {
     font-style: italic;
 }
 h1, h2, h3 {
-    color: #996633;
+    color: #963;
     background: transparent;
 }
 h1 { font: 900 170% sans-serif; border-bottom: 1px solid gray; }
@@ -90,6 +90,10 @@ table th, table td {
     margin: 0 1.2em 0 0;
 }
 
+.contents a.tool {
+    color: #963;
+}
+
 div.def {
     padding: 1em 1em;
     border-bottom: 0.8pt dashed #777;
@@ -104,7 +108,7 @@ div.def .footer {
     text-align: right;
 }
 
-a.tool {
+.def a.tool {
     color: #777;
     font-size: 0.8em;
 }
