@@ -1,4 +1,6 @@
 
+/* global styles */
+
 body {
     font-family: verdana, geneva, arial, sans-serif;
     font-size: 90%;
@@ -36,6 +38,9 @@ blockquote, q {
     font-style: italic;
 }
 
+code {
+    font-size: 1.4em;
+}
 
 :link { color: #00C; background: transparent }
 :visited { color: #609; background: transparent }
@@ -59,48 +64,93 @@ table th, table td {
     padding: 0.2em;
 }
 
-.vocab dl.contents {
+/* role/widget styles */
+
+#toc {
+    background-color: #eff;
     border: 0.8pt dashed #777;
-    background-color: #f1f5f9;
+    font-size: 80%;
+    padding: 0.2em 0.6em;
+}
+#toc h2 {
+    color: #333;
+    border: none;
+    margin: 0.2em 0;
+}
+#toc a {
+    color: #333;
+}
+
+.header {
+    position: relative;
+}
+.header a.tool {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.col-2 {
+    overflow: auto;
+}
+.col-2 .col {
+    float: left;
+    width: 49%;
+}
+
+a.tool {
+    color: #777;
+    font-size: 0.8em;
+}
+
+/* domain styles */
+
+#hierarchy ul {
+    font-size: 0.8em;
+}
+#hierarchy ul ul {
+    font-size: 1em;
+}
+
+#defs dl {
+    border: 0.8pt dashed #777;
+    background-color: #eff;
     display: block;
     list-style: none;
     margin: 0;
     padding: 0.4em 0.8em;
 }
-.vocab dl.contents dt {
+#defs dl dt {
     display: block;
     margin: 0 0.5em 0 0;
 }
-.vocab dl.contents dd {
+#defs dl dd {
     display: block;
     margin: 0;
     padding-left: 2em;
 }
-.vocab dl.contents dd ul {
+#defs dl dd ul {
     display: block;
     list-style: none;
     margin: 0 0 1em 0;
     padding: 0;
     overflow: auto;
 }
-.vocab dl.contents dd ul li {
+#defs dl dd ul li {
     display: block;
     list-style: none;
     float: left;
     margin: 0 1.2em 0 0;
 }
 
-.contents a.tool {
-    color: #963;
-}
-
 div.def {
     padding: 1em 1em;
     border-bottom: 0.8pt dashed #777;
+    margin-bottom: 1em;
 }
 div.def h3 {
     color: #333;
-    background-color: #f1f5f9;
+    background-color: #eff;
     padding: 0.2em;
     margin: 0 -0.2em;
 }
@@ -108,8 +158,24 @@ div.def .footer {
     text-align: right;
 }
 
-.def a.tool {
-    color: #777;
-    font-size: 0.8em;
+dl.termdef dd {
+    margin: 0 0 0.6em 3.5em;
+}
+
+dl.termdef dl {
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+}
+dl.termdef dl dt {
+    clear: left;
+    float: left;
+    margin: 0 0.8em 0 0;
+    padding: 0;
+}
+dl.termdef dl dd {
+    float: left;
+    margin: 0;
+    padding: 0;
 }
 
