@@ -92,7 +92,7 @@ table th, table td {
     vertical-align: top;
 }
 
-/* role/widget styles */
+/* role/widget/structure styles */
 
 #main {
     background-color: #fff;
@@ -245,6 +245,8 @@ a.tool {
 div.def {
     padding: 0.4em 1em;
     border: 0.8pt solid #ccc;
+    -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0.5em 1em;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0.5em 1em;
     margin-bottom: 2em;
 }
 div.def .header {
@@ -288,7 +290,6 @@ dl.termdef dl dd {
     padding: 0;
 }
 
-/**/
 dl.termdef .raw {
     background-color: #eee;
     border: 1.3pt solid #ddd;
@@ -303,5 +304,12 @@ dl.termdef dd.raw {
 dl.termdef .raw .raw {
     border: none;
 }
-/**/
+
+div.def.class {
+    background-color: #fffff6;
+}
+div.def.class dl.termdef .raw {
+    background-color: #f1f1e9;
+    border-color: #e1e1d9;
+}
 
