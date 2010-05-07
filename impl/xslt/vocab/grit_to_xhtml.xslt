@@ -7,6 +7,7 @@
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:dcelem="http://purl.org/dc/elements/1.1/"
                 xmlns:dct="http://purl.org/dc/terms/"
+                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:gr="http://purl.org/oort/impl/xslt/grit/lib/common#">
 
   <xsl:import href="../grit/lib/common.xslt"/>
@@ -24,11 +25,11 @@
 
   <xsl:variable name="vocab" select="$r[@uri = $vocab-uri]"/>
 
-  <xsl:output method="html" encoding="utf-8"
+  <xsl:output method="xml" encoding="utf-8"
               omit-xml-declaration="yes" indent="yes"/>
 
   <xsl:template match="/">
-    <html xml:lang="{$lang}">
+    <html lang="{$lang}" xml:lang="{$lang}">
       <xsl:variable name="title">
         <xsl:apply-templates mode="label" select="$vocab"/>
         <xsl:text>| Vocabulary Specification</xsl:text>
@@ -41,7 +42,7 @@
         <meta name="copyright" content="" />
         <meta name="language" content="{$lang}" />
         -->
-        <link rel="stylesheet" href="{$mediabase}/css/vocab.css" />
+        <link rel="stylesheet" href="{$mediabase}/css/vocab.css" type="text/css" />
       </head>
       <body>
           <div id="main" role="main">
@@ -60,7 +61,7 @@
 
       <h1><xsl:apply-templates mode="label" select="."/></h1>
 
-      <div id="toc">
+      <div id="toc" role="navigation">
         <h2>Table of Contents</h2>
         <ul>
           <li><a href="#details">Vocabulary</a></li>
@@ -89,7 +90,7 @@
             </dd>
           </xsl:with-param>
         </xsl:call-template>
-        <div id="defs">
+        <div id="defs" role="navigation">
           <h3>Definitions</h3>
           <dl>
             <dt><xsl:value-of select="count($classes)"/> classes</dt>
