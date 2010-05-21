@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://example.org/ns#">
+    <owl:ObjectProperty rdf:about="#part">
+        <rdfs:domain>
+            <owl:Class>
+                <owl:unionOf>
+                    <rdf:Description>
+                        <rdf:first rdf:resource="#Some"/>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:first rdf:resource="#Other"/>
+                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:domain>
+    </owl:ObjectProperty>
+</rdf:RDF>
