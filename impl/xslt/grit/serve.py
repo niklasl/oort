@@ -1,12 +1,14 @@
 import os
 from os import path as p
+import glob
 from StringIO import StringIO
-from lxml import etree
+from lxml import etree, html
 from rdflib import ConjunctiveGraph
 from rdfextras.tools.pathutils import guess_format
 from paste.fileapp import DataApp, FileApp
 from paste.httpexceptions import HTTPNotFound
 from webob import Request
+
 
 _herepath = lambda *parts: p.normpath(p.join(p.dirname(__file__), *parts))
 GRIT_XSLT = etree.XSLT(etree.parse(_herepath("rdfxml-grit.xslt")))
@@ -28,12 +30,11 @@ class WebApp(object):
         self._sourcecache = {}
         self._filedir = filedir
 
-
     def __call__(self, environ, start_response):
-        handler = self._get_handler(Request(environ))
+        handler = self.get_handler(Request(environ))
         return handler(environ, start_response)
 
-    def _get_handler(self, req):
+    def get_handler(self, req):
         filepath = p.join(self._filedir, *req.path.split('/'))
         if not p.exists(filepath):
             return HTTPNotFound('The resource does not exist',
@@ -45,12 +46,12 @@ class WebApp(object):
             return DataApp("""<!doctype html>
                 <form>
                     <label>Data:
-                        <textarea name="data" cols="42" rows="8"></textarea>
+                        <textarea name="data" cols="72" rows="8"></textarea>
                     </label>
                     <p>
                         <label>
                             XSLT:
-                            <input name="xslt" size="42" />
+                            <input name="xslt" size="72" />
                         </label>
                     </p>
                     <p>
@@ -63,22 +64,29 @@ class WebApp(object):
                 </form>
                 """, [('Content-Type', "text/html")])
 
-        sources = tuple(sorted(os.path.expanduser(l)
-                for l in req.GET['data'].splitlines()))
+        sources_repr = req.GET['data']
 
-        grit_data = self._sourcecache.get(sources)
+        grit_data = self._sourcecache.get(sources_repr)
         if not grit_data:
+            sources = tuple(sorted(pth for l in sources_repr.splitlines()
+                                    for pth in glob.glob(p.expanduser(l))))
             rdfxml = to_rdf_etree(sources)
             grit_data = GRIT_XSLT(rdfxml)
         if req.GET.get('cache') == 'on':
-            self._sourcecache[sources] = grit_data
+            self._sourcecache[sources_repr] = grit_data
         else:
             self._sourcecache.clear()
 
         xslt_path = req.GET['xslt']
-        xslt = etree.XSLT(etree.parse(xslt_path))
+        xslt = etree.XSLT(etree.parse(p.expanduser(xslt_path)))
         mimetype = "text/html"
-        output = etree.tostring(xslt(grit_data))
+        #output = etree.tostring(xslt(grit_data))
+        ##from html5lib.treewalkers import getTreeWalker
+        ##from html5lib.serializer import XHTMLSerializer
+        ##result = xslt(grit_data)
+        ##out_gen = XHTMLSerializer().serialize(getTreeWalker('lxml')(result))
+        ##output = "\n".join(out_gen).encode('utf-8')
+        output = html.tostring(xslt(grit_data))
 
         return DataApp(output, [('Content-Type', mimetype)])
 
