@@ -285,11 +285,10 @@
       <xsl:with-param name="prelabel"><xsl:value-of select="$l[@name='class']"/>: </xsl:with-param>
       <xsl:with-param name="content">
         <xsl:variable name="subclasses" select="$r[rdfs:subClassOf/@ref = current()/@uri]"/>
-        <!-- TODO: XalanJ has some null-ns bug, and needs "*/@ref" instead of "li/@ref". -->
         <xsl:variable name="domainof" select="$r[rdfs:domain[@ref = current()/@uri
-                                             or owl:unionOf[*/@ref = current()/@uri] ] ]"/>
+                                             or owl:unionOf[li/@ref = current()/@uri] ] ]"/>
         <xsl:variable name="rangeof" select="$r[rdfs:range[@ref = current()/@uri
-                                             or owl:unionOf[*/@ref = current()/@uri] ] ]"/>
+                                             or owl:unionOf[li/@ref = current()/@uri] ] ]"/>
         <xsl:if test="$subclasses | $domainof | $rangeof">
           <dl class="usage">
             <xsl:if test="$domainof">
