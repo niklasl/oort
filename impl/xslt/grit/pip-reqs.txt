@@ -1,0 +1,5 @@
+Paste==1.7.3.1
+WebOb==0.9.8
+lxml==2.2.4
+rdflib==3.0.0
+-e hg+https://rdfextras.googlecode.com/hg/@0260d7d16e9ef85556c1ad49c1a33eeff9ebc8a1#egg=rdfextras-tip
