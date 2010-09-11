@@ -3,6 +3,6 @@
 
 <http://example.org/item/1>
     rdf:value 1;
-    rdf:value 1.0;
+    rdf:value "1.0"^^xsd:float;
     rdf:value "true"^^xsd:boolean .
 

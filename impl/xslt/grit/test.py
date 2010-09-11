@@ -45,7 +45,7 @@ def run_grit_test(rdfxml_fpath, grit_fpath):
                     grit_fpath, diff())
 
 def file_pairs(testdir=None):
-    testdir = testdir or _herepath('..','..','etc','grit','examples')
+    testdir = testdir or _herepath('..','..','..','etc','grit','examples')
     for grit_fpath in glob(p.join(testdir, '*.xml')):
         rdfxml_fpath = grit_fpath.replace('.xml', '.rdf')
         if not p.exists(rdfxml_fpath):
