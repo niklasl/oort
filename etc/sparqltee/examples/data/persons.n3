@@ -1,0 +1,20 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix : <http://xmlns.com/foaf/0.1/> .
+
+## Persons
+
+<http://purl.org/NET/dust/foaf#self> a :Person;
+    :name "Niklas Lindström";
+    rdfs:comment "Does stuff with RDF."@en;
+    :interest <http://en.wikipedia.org/wiki/Resource_Description_Framework>,
+            <http://python.org/> .
+
+## Additional data
+
+<http://en.wikipedia.org/wiki/Resource_Description_Framework>
+    dct:title "Resource Description Framework"@en .
+
+<http://python.org/>
+    dct:title "Python Programming Language"@en .
+

@@ -1,0 +1,23 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX : <http://xmlns.com/foaf/0.1/>
+
+SELECT * WHERE {
+
+    ?person a :Person;
+        :name ?person__1_name .
+    OPTIONAL {
+        ?person :firstName ?person__1_firstName;
+            :lastName ?person__1_lastName .
+    }
+    OPTIONAL {
+        ?person :givenName ?person__1_givenName;
+            :surname ?person__1_surname .
+    }
+    OPTIONAL { ?person rdfs:comment ?person__1_comment }
+    OPTIONAL {
+        ?person :interest ?person__interest .
+        ?person__interest dct:title ?person__interest__1_title .
+    }
+
+}

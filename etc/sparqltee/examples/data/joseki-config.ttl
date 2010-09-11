@@ -1,0 +1,40 @@
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix module: <http://joseki.org/2003/06/module#> .
+@prefix joseki: <http://joseki.org/2005/06/configuration#> .
+@prefix ja:     <http://jena.hpl.hp.com/2005/11/Assembler#> .
+
+<> rdfs:label "Joseki Configuration File" .
+
+<#server> a joseki:Server;
+    joseki:initialization
+        [ module:implementation
+            [ module:className <java:org.joseki.util.ServiceInitSimple>;
+              rdfs:label "Example initializer" ]
+        ] .
+
+<#fixed_service> a joseki:Service;
+    rdfs:label          "service point";
+    joseki:serviceRef   "sparql";
+    joseki:dataset      <#persons>;
+    joseki:processor    <#ProcessorSPARQL_FixedDS> .
+
+<#ProcessorSPARQL_FixedDS> a joseki:Processor;
+    rdfs:label "SPARQL processor for fixed datasets";
+    module:implementation <#ImplSPARQL>;
+    # This processor does not accept queries with FROM/FROM NAMED
+    joseki:allowExplicitDataset       "false"^^xsd:boolean;
+    joseki:allowWebLoading            "false"^^xsd:boolean;
+    joseki:lockingPolicy              joseki:lockingPolicyMRSW .
+
+<#ImplSPARQL> a joseki:ServiceImpl;
+    module:className <java:org.joseki.processors.SPARQL> .
+
+<#persons> a ja:RDFDataset;
+    rdfs:label "Persons Dataset";
+    ja:defaultGraph
+      [ a ja:MemoryModel;
+        rdfs:label "persons.n3";
+        ja:content [ja:externalContent <file:persons.n3> ];
+      ] .
+

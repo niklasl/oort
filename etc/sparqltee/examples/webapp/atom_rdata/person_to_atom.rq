@@ -1,0 +1,40 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <http://xmlns.com/foaf/0.1/>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX doap: <http://usefulinc.com/ns/doap#>
+
+SELECT * WHERE {
+
+    ?entry a :Person;
+
+    {
+        ?entry :firstName ?entry__title_1;
+            :lastName ?entry__title_2 .
+    } UNION {
+        ?entry :givenName ?entry__title_1;
+            :surname ?entry__title_2 .
+    } UNION {
+        ?entry :name ?entry__title .
+    }
+
+    OPTIONAL {
+        ?entry rdf:label ?entry__subtitle .
+    }
+
+    OPTIONAL {
+        ?entry rdfs:comment ?entry__summary .
+    }
+
+    OPTIONAL {
+        ?entry :interest ?entry__cat_interest .
+        ?entry__cat_interest a ?entry__cat_interest__type;
+            doap:name ?entry__cat_interest__label .
+    }
+
+    OPTIONAL {
+        ?entry :project ?entry__rel_project .
+        ?entry__rel_project a ?entry__rel_project__type;
+            dct:title ?entry__rel_project__label .
+    }
+
+}
