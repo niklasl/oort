@@ -1,0 +1,16 @@
+<tests>
+  <test_term>
+    <item>
+      <uri>http://example.org/ns#term</uri>
+      <term>term</term>
+    </item>
+    <item>
+      <uri>http://example.org/ns/term</uri>
+      <term>term</term>
+    </item>
+    <item>
+      <uri>urn:x-example:ns:term</uri>
+      <term>term</term>
+    </item>
+  </test_term>
+</tests>
