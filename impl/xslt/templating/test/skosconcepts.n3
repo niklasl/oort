@@ -1,0 +1,38 @@
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <http://example.org/> .
+
+
+</def/dataconv> a skos:ConceptScheme;
+  skos:prefLabel "Data Conversion" .
+
+</def/dataconv/templates> a skos:Concept;
+  skos:prefLabel "Templates" .
+
+</def/dataconv/rdfa-templates> a skos:Concept;
+    skos:prefLabel "RDFa Templates";
+    skos:definition "Templates with RDFa slots filled in with RDF data.";
+    skos:inScheme </def/dataconv>;
+    skos:broader </def/dataconv/templates>;
+    skos:related </def/dataconv/sparql-templates>;
+    skos:related </def/dataconv/xslt-templates>;
+    skos:narrower </def/dataconv/xslt-rdfa-templates> .
+
+</def/dataconv/sparql-templates> a skos:Concept;
+  skos:prefLabel "SPARQL Templates" .
+
+</def/dataconv/xslt-templates> a skos:Concept;
+        skos:prefLabel "XSLT Templates" .
+
+</def/dataconv/xslt-rdfa-templates> a skos:Concept;
+  skos:prefLabel "XSLT-based RDFa Templates" .
+
+</docs/using-rdfa-templates> a foaf:Document;
+    dct:title "How To Effectively Use RDFa Templates";
+    dct:subject </def/dataconv/rdfa-templates> .
+
+</docs/facets-for-indexing> a foaf:Document;
+    dct:title "Facets For Indexing";
+    dct:subject </def/dataconv/rdfa-templates> .
+
