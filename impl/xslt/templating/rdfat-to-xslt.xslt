@@ -11,6 +11,8 @@
 
   <!-- TODO: params for lang and base / about -->
 
+  <!-- TODO: also allow @src everyhere @about is used -->
+
   <template match="/">
     <xsl:stylesheet version="1.0"
                     xmlns:func="http://exslt.org/functions"
@@ -28,7 +30,10 @@
     </xsl:stylesheet>
   </template>
 
-  <!-- TODO: qualifiers (from @about|@src) for @property and @typeof -->
+  <!-- TODO: qualifiers (@about|@src) for @property and @typeof -->
+  <!-- TODO: qualifiers (@datatype|@xml:lang) for @property -->
+
+  <!-- TODO: add @datatype for datatyped literals -->
 
   <template match="*[@property and not(@rel)]">
     <xsl:for-each select="{@property}">
