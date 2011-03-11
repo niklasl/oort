@@ -9,7 +9,7 @@ from rdfextras.tools.pathutils import guess_format
 _herepath = lambda *parts: p.normpath(p.join(p.dirname(__file__), *parts))
 
 GRIT_XSLT = etree.XSLT(etree.parse(_herepath("..", "grit", "rdfxml-grit.xslt")))
-MK_RDF_TPLT_XSLT = etree.XSLT(etree.parse(_herepath("rdfat-to-xslt.xslt")))
+RDFAT_XSLT = etree.XSLT(etree.parse(_herepath("rdfat-to-xslt.xslt")))
 
 
 def to_rdf_etree(sources):
@@ -22,11 +22,11 @@ def to_rdf_etree(sources):
     return etree.parse(io)
 
 def apply_rdfa_template(rdfa_tplt_path, sources):
-  rdf_xslt_tree = MK_RDF_TPLT_XSLT(etree.parse(rdfa_tplt_path))
-  rdf_xslt = etree.XSLT(rdf_xslt_tree)
-  rdftree = to_rdf_etree(sources)
-  grit_tree = GRIT_XSLT(rdftree)
-  return rdf_xslt(grit_tree)
+  rdfat_tree = RDFAT_XSLT(etree.parse(rdfa_tplt_path))
+  rdfat = etree.XSLT(rdfat_tree)
+  rdf_tree = to_rdf_etree(sources)
+  grit_tree = GRIT_XSLT(rdf_tree)
+  return rdfat(grit_tree)
 
 
 if __name__ == '__main__':
