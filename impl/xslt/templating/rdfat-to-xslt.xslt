@@ -88,9 +88,9 @@
     </call-template>
   </template>
 
-  <template match="*[@rev and
-            not(@resource or starts-with(@resource, '?')) and
-            not(@href or starts-with(@href, '?'))]">
+  <template match="*[@rev and (
+            not(@resource) or starts-with(@resource, '?') and
+            not(@href) or starts-with(@href, '?'))]">
     <call-template name="relrev">
       <with-param name="expr">
         <call-template name="rev-expr"/>
