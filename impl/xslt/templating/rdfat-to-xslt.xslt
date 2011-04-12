@@ -8,6 +8,7 @@
   <namespace-alias stylesheet-prefix="xsl" result-prefix="xslt"/>
 
   <variable name="RDF">http://www.w3.org/1999/02/22-rdf-syntax-ns#</variable>
+  <variable name="XSD">http://www.w3.org/2001/XMLSchema#</variable>
 
   <!-- TODO: params for lang and base / about -->
 
@@ -25,6 +26,17 @@
 
       <xsl:template match="/graph">
         <apply-templates/>
+      </xsl:template>
+
+      <xsl:template match="*[@fmt='datatype']">
+        <xsl:attribute name="datatype">
+          <xsl:text>
+            <value-of select="local-name(/*/namespace::*[. = $XSD])"/>
+            <text>:</text>
+          </xsl:text>
+          <xsl:value-of select="local-name(*)"/>
+        </xsl:attribute>
+        <xsl:value-of select="*"/>
       </xsl:template>
 
     </xsl:stylesheet>
