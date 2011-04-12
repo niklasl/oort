@@ -10,9 +10,8 @@
   <variable name="RDF">http://www.w3.org/1999/02/22-rdf-syntax-ns#</variable>
   <variable name="XSD">http://www.w3.org/2001/XMLSchema#</variable>
 
-  <!-- TODO: params for base and about -->
-
   <!-- TODO: also allow @src everyhere @about is used -->
+  <!-- TODO: param for base -->
 
   <template match="/">
     <xsl:stylesheet version="1.0"
@@ -23,6 +22,17 @@
 
       <!-- TODO: allow this to be set locally in markup (and "tunnelled") -->
       <xsl:param name="lang"/>
+
+      <xsl:param>
+        <attribute name="name">
+        <choose>
+          <when test="/*/@t:primary-name">
+            <value-of select="/*/@t:primary-name"/>
+          </when>
+          <otherwise>primary</otherwise>
+        </choose>
+        </attribute>
+      </xsl:param>
 
       <xsl:key name="rel" match="/graph/resource" use="@uri"/>
       <xsl:variable name="r" select="/graph/resource"/>
@@ -51,9 +61,9 @@
   </template>
 
   <!-- TODO: qualifiers (@about|@src) for @property and @typeof -->
-  <!-- TODO: @datatype qualifier for @property -->
 
   <template match="*[@property and not(@rel)]">
+    <!-- TODO: @datatype qualifier for @property -->
     <xsl:for-each select="{@property}[not($lang) or not(@xml:lang) or
                                       @xml:lang = $lang]">
       <copy>
@@ -278,6 +288,25 @@
     </xsl:variable>
   </template>
 
+  <!-- TODO: replace t:with[@about] with support for about as qualifier -->
+  <template match="t:with[@about]">
+    <variable name="about">
+      <choose>
+        <when test="starts-with(@about, '$')">
+          <value-of select="@about"/>
+        </when>
+        <otherwise>
+          <text>'</text><value-of select="@about"/><text>'</text>
+        </otherwise>
+      </choose>
+    </variable>
+    <xsl:for-each select="*[@uri = {$about}]">
+      <apply-templates>
+        <with-param name="in-relrev-scope" select="true()"/>
+      </apply-templates>
+    </xsl:for-each>
+  </template>
+
   <template match="t:for">
     <xsl:apply-templates/>
   </template>
@@ -286,12 +315,12 @@
     <xsl:value-of select="{@eval}"/>
   </template>
 
-  <!-- TODO: remove this in favour of either $uri or bound var? -->
+  <!-- TODO: replace t:uri with either $uri or bound var? -->
   <template match="t:uri">
     <xsl:value-of select="@uri | @ref"/>
   </template>
 
-  <template match="t:if">
+  <template match="t:if[@eval]">
     <xsl:if test="{@eval}"><apply-templates/></xsl:if>
   </template>
 
@@ -305,6 +334,8 @@
       </attribute>
     </xsl:sort>
   </template>
+
+  <template match="@t:primary-name"/>
 
   <template match="*|@*" name="copy-over">
     <param name="in-relrev-scope" select="false()"/>
