@@ -10,7 +10,7 @@
   <variable name="RDF">http://www.w3.org/1999/02/22-rdf-syntax-ns#</variable>
   <variable name="XSD">http://www.w3.org/2001/XMLSchema#</variable>
 
-  <!-- TODO: params for lang and base / about -->
+  <!-- TODO: params for base and about -->
 
   <!-- TODO: also allow @src everyhere @about is used -->
 
@@ -21,11 +21,19 @@
                     exclude-result-prefixes="func dyn">
       <copy-of select="/*/namespace::*"/>
 
+      <!-- TODO: allow this to be set locally in markup (and "tunnelled") -->
+      <xsl:param name="lang"/>
+
       <xsl:key name="rel" match="/graph/resource" use="@uri"/>
       <xsl:variable name="r" select="/graph/resource"/>
 
       <xsl:template match="/graph">
         <apply-templates/>
+      </xsl:template>
+
+      <xsl:template match="*[@xml:lang]">
+        <xsl:copy-of select="@xml:lang"/>
+        <xsl:apply-templates/>
       </xsl:template>
 
       <xsl:template match="*[@fmt='datatype']">
@@ -43,12 +51,11 @@
   </template>
 
   <!-- TODO: qualifiers (@about|@src) for @property and @typeof -->
-  <!-- TODO: qualifiers (@datatype|@xml:lang) for @property -->
-
-  <!-- TODO: add @datatype for datatyped literals -->
+  <!-- TODO: @datatype qualifier for @property -->
 
   <template match="*[@property and not(@rel)]">
-    <xsl:for-each select="{@property}">
+    <xsl:for-each select="{@property}[not($lang) or not(@xml:lang) or
+                                      @xml:lang = $lang]">
       <copy>
         <apply-templates select="@*">
           <with-param name="in-property-scope" select="true()"/>
