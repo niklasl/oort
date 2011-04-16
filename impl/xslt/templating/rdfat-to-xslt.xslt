@@ -26,8 +26,8 @@
       <xsl:param>
         <attribute name="name">
         <choose>
-          <when test="/*/@t:primary-name">
-            <value-of select="/*/@t:primary-name"/>
+          <when test="/*/@t:primary-param">
+            <value-of select="/*/@t:primary-param"/>
           </when>
           <otherwise>primary</otherwise>
         </choose>
@@ -60,7 +60,46 @@
     </xsl:stylesheet>
   </template>
 
-  <!-- TODO: qualifiers (@about|@src) for @property and @typeof -->
+  <template match="*[@about or @typeof]">
+    <param name="in-relrev-scope" select="false()"/>
+    <variable name="about-scope">
+      <if test="@about and not(starts-with(@about, '?'))">
+        <text>[@uri = </text>
+        <choose>
+          <when test="starts-with(@about, '$')">
+            <value-of select="@about"/>
+          </when>
+          <otherwise>
+            <text>'</text><value-of select="@about"/><text>'</text>
+          </otherwise>
+        </choose>
+        <text>]</text>
+      </if>
+    </variable>
+    <variable name="type-scope">
+      <if test="@typeof and not(starts-with(@typeof, '?'))">
+        <value-of select="concat('[a/', @typeof, ']')"/>
+      </if>
+    </variable>
+    <choose>
+      <when test="$about-scope or $type-scope">
+        <variable name="ctxt">
+          <choose>
+            <when test="$in-relrev-scope">self::*</when>
+            <otherwise>$r</otherwise>
+          </choose>
+        </variable>
+        <xsl:for-each select="{$ctxt}{$about-scope}{$type-scope}">
+          <call-template name="copy-and-continue"/>
+        </xsl:for-each>
+      </when>
+      <otherwise>
+        <call-template name="copy-and-continue"/>
+      </otherwise>
+    </choose>
+  </template>
+
+  <!-- TODO: include bound @about in context for @property, @rel, @rev -->
 
   <template match="*[@property and not(@rel)]">
     <!-- TODO: @datatype qualifier for @property -->
@@ -85,26 +124,6 @@
         </choose>
       </copy>
     </xsl:for-each>
-  </template>
-
-  <template match="*[@typeof]">
-    <param name="in-relrev-scope" select="false()"/>
-    <choose>
-      <when test="starts-with(@typeof, '?')">
-        <call-template name="copy-over"/>
-      </when>
-      <otherwise>
-        <variable name="ctxt">
-          <choose>
-            <when test="$in-relrev-scope">self::*</when>
-            <otherwise>$r</otherwise>
-          </choose>
-        </variable>
-        <xsl:for-each select="{$ctxt}[a/{@typeof}]">
-          <call-template name="copy-over"/>
-        </xsl:for-each>
-      </otherwise>
-    </choose>
   </template>
 
   <template match="*[@rel and (
@@ -137,7 +156,7 @@
               <apply-templates/>
             </when>
             <otherwise>
-              <call-template name="copy-over"/>
+              <call-template name="copy-and-continue"/>
             </otherwise>
           </choose>
         </xsl:for-each>
@@ -182,27 +201,6 @@
     <text>[true()</text><call-template name="qualifiers"/><text>]</text>
   </template>
 
-  <template name="qualifiers">
-    <!-- TODO: scooped up too much, but really just check empty elems? Perhaps
-         collect things marked with t:required='true'? -->
-    <for-each select="*[@typeof[not(starts-with(., '?'))] and not(@about)
-              and not(*)]">
-      <text> and a/</text><value-of select="@typeof"/>
-    </for-each>
-    <for-each select="*[@rel[substring-after(., ':') = 'type']]">
-      <if test="ancestor-or-self::*/namespace::*[local-name() =
-                    substring-before(current()/@rel, ':') and . = $RDF]">
-        <variable name="safe-curie" select="@resource | @href"/>
-        <variable name="curie" select="substring-before(
-                  substring-after($safe-curie, '['), ']')"/>
-        <if test="$curie != ''">
-          <text> and a/</text><value-of select="$curie"/>
-        </if>
-      </if>
-    </for-each>
-    <!-- TODO: qualify on value for @resource|@href -->
-  </template>
-
   <template name="rev-expr">
     <variable name="rev">
       <apply-templates select="@rev" mode="relrev"/>
@@ -227,6 +225,27 @@
     </choose>
   </template>
 
+  <template name="qualifiers">
+    <!-- TODO: scooped up too much, but really just check empty elems? Perhaps
+         collect things marked with t:required='true'? -->
+    <for-each select="*[@typeof[not(starts-with(., '?'))] and not(@about)
+              and not(*)]">
+      <text> and a/</text><value-of select="@typeof"/>
+    </for-each>
+    <for-each select="*[@rel[substring-after(., ':') = 'type']]">
+      <if test="ancestor-or-self::*/namespace::*[local-name() =
+                    substring-before(current()/@rel, ':') and . = $RDF]">
+        <variable name="safe-curie" select="@resource | @href"/>
+        <variable name="curie" select="substring-before(
+                  substring-after($safe-curie, '['), ']')"/>
+        <if test="$curie != ''">
+          <text> and a/</text><value-of select="$curie"/>
+        </if>
+      </if>
+    </for-each>
+    <!-- TODO: qualify on value for @resource|@href -->
+  </template>
+
   <template match="@*[contains(., ' ')]" mode="relrev">
     <value-of select="concat(
               '(', translate(normalize-space(.), ' ', '|'), ')')"/>
@@ -245,6 +264,9 @@
           <if test="$in-property-scope">../</if>
           <text>@uri}</text>
         </when>
+        <when test="starts-with(., '$')">
+          <text>{</text><value-of select="."/><text>}</text>
+        </when>
         <otherwise>
           <apply-templates/>
         </otherwise>
@@ -260,7 +282,10 @@
             <xsl:if test="position() > 1">
               <xsl:text xml:space="preserve"> </xsl:text>
             </xsl:if>
-            <xsl:value-of select="name(.)"/>
+            <xsl:value-of select="local-name(document('')/*/namespace::*[
+                                      . = namespace-uri(current())])"/>
+            <xsl:text>:</xsl:text>
+            <xsl:value-of select="local-name(.)"/>
           </xsl:for-each>
         </xsl:attribute>
       </when>
@@ -286,25 +311,6 @@
         </choose>
       </attribute>
     </xsl:variable>
-  </template>
-
-  <!-- TODO: replace t:with[@about] with support for about as qualifier -->
-  <template match="t:with[@about]">
-    <variable name="about">
-      <choose>
-        <when test="starts-with(@about, '$')">
-          <value-of select="@about"/>
-        </when>
-        <otherwise>
-          <text>'</text><value-of select="@about"/><text>'</text>
-        </otherwise>
-      </choose>
-    </variable>
-    <xsl:for-each select="*[@uri = {$about}]">
-      <apply-templates>
-        <with-param name="in-relrev-scope" select="true()"/>
-      </apply-templates>
-    </xsl:for-each>
   </template>
 
   <template match="t:for">
@@ -335,9 +341,9 @@
     </xsl:sort>
   </template>
 
-  <template match="@t:primary-name"/>
+  <template match="@t:primary-param"/>
 
-  <template match="*|@*" name="copy-over">
+  <template match="*|@*" name="copy-and-continue">
     <param name="in-relrev-scope" select="false()"/>
     <copy>
       <apply-templates select="@*"/>
