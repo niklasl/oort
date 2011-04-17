@@ -60,37 +60,23 @@
     </xsl:stylesheet>
   </template>
 
-  <template match="*[@about or @typeof]">
+  <template match="*[(@about or @typeof) and not(@property)]">
     <param name="in-relrev-scope" select="false()"/>
-    <variable name="about-scope">
-      <if test="@about and not(starts-with(@about, '?'))">
-        <text>[@uri = </text>
-        <choose>
-          <when test="starts-with(@about, '$')">
-            <value-of select="@about"/>
-          </when>
-          <otherwise>
-            <text>'</text><value-of select="@about"/><text>'</text>
-          </otherwise>
-        </choose>
-        <text>]</text>
-      </if>
-    </variable>
-    <variable name="type-scope">
-      <if test="@typeof and not(starts-with(@typeof, '?'))">
-        <value-of select="concat('[a/', @typeof, ']')"/>
-      </if>
+    <variable name="about-and-type-scope">
+      <call-template name="about-and-type-scope"/>
     </variable>
     <choose>
-      <when test="$about-scope or $type-scope">
+      <when test="$about-and-type-scope">
         <variable name="ctxt">
           <choose>
             <when test="$in-relrev-scope">self::*</when>
             <otherwise>$r</otherwise>
           </choose>
         </variable>
-        <xsl:for-each select="{$ctxt}{$about-scope}{$type-scope}">
-          <call-template name="copy-and-continue"/>
+        <xsl:for-each select="{$ctxt}{$about-and-type-scope}">
+          <call-template name="copy-and-continue">
+            <with-param name="in-relrev-scope" select="true()"/>
+          </call-template>
         </xsl:for-each>
       </when>
       <otherwise>
@@ -99,11 +85,22 @@
     </choose>
   </template>
 
-  <!-- TODO: include bound @about in context for @property, @rel, @rev -->
-
   <template match="*[@property and not(@rel)]">
+    <param name="in-relrev-scope" select="false()"/>
+    <variable name="scope">
+      <choose>
+        <when test="$in-relrev-scope">
+          <text>self::*</text>
+        </when>
+        <otherwise>
+          <text>*</text>
+        </otherwise>
+      </choose>
+      <call-template name="about-and-type-scope"/>
+      <text>/</text>
+    </variable>
     <!-- TODO: @datatype qualifier for @property -->
-    <xsl:for-each select="{@property}[not($lang) or not(@xml:lang) or
+    <xsl:for-each select="{$scope}{@property}[not($lang) or not(@xml:lang) or
                                       @xml:lang = $lang]">
       <copy>
         <apply-templates select="@*">
@@ -125,6 +122,26 @@
       </copy>
     </xsl:for-each>
   </template>
+
+  <template name="about-and-type-scope">
+    <if test="@about and not(starts-with(@about, '?'))">
+      <text>[@uri = </text>
+      <choose>
+        <when test="starts-with(@about, '$')">
+          <value-of select="@about"/>
+        </when>
+        <otherwise>
+          <text>'</text><value-of select="@about"/><text>'</text>
+        </otherwise>
+      </choose>
+      <text>]</text>
+    </if>
+    <if test="@typeof and not(starts-with(@typeof, '?'))">
+      <value-of select="concat('[a/', @typeof, ']')"/>
+    </if>
+  </template>
+
+  <!-- TODO: include bound @about in context for @rel, @rev -->
 
   <template match="*[@rel and (
             not(@resource) or starts-with(@resource, '?') and
@@ -156,7 +173,9 @@
               <apply-templates/>
             </when>
             <otherwise>
-              <call-template name="copy-and-continue"/>
+              <call-template name="copy-and-continue">
+                <with-param name="in-relrev-scope" select="true()"/>
+              </call-template>
             </otherwise>
           </choose>
         </xsl:for-each>
