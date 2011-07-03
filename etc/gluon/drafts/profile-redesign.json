@@ -1,0 +1,74 @@
+{
+  //"profile": link-to-profile
+  "context": {
+    "reserved": {
+      "vocab": "vocab",
+      "about": "id",
+      "multipleSuffix": "Set",
+      "collectionSuffix": "List",
+      //bagSuffix: "Bag", seqSuffix: "Seq", altSuffix: "Alt" // legacy RDF containers
+      "languageMapSuffix": "ByLang"
+    },
+    // probably predefined:
+    "autocast": ["date", "dateTime", "uri"],
+    "vocabularies": {
+      // predefined:
+      //"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      //"rdfs": "...",
+      //"extend": null, // use to clear predefined
+      "dc": "http://purl.org/dc/terms/",
+      "foaf": "http://xmlns.com/foaf/0.1/",
+      "sioc": "http://rdfs.org/sioc/ns#"
+    },
+    "vocab": "foaf",
+    "terms": {
+      // predefined:
+      //"rdf": ["type"],
+      //"rdfs": ["label", "comment"],
+      "dc": ["title", "creator", "created"],
+      "sioc": ["Post"]
+    },
+    "typeterms": { // to override imports for certain types
+      "Person": { // foaf:Person, since current vocab is foaf
+        "foaf": ["title"]
+      }
+    },
+    "define": {
+      // predefined:(
+      "type": {"cast": "term"},
+      "types": {"multipleOf": "type"}, // "virtual"
+      //)
+      "name": {"cast": "string"}, // otherwise lang will apply
+      //"bday": {"cast": "date"}, // to explicitly cast to date
+      //"identifier": {"": "dc", cast": "anyURI"}, // to explicitly cast to anyURI
+      //"topicSet": true, // always as a multiple ("topic" + multipleSuffix)
+      //"topics": {"term": "topic", multiple: true}, // always multiple, alias (no suffix)
+      //"topic": {"multiple": true} // always multiple, use term name (no suffix or alias)
+      "creations": {"inverseOf": "creator", "multiple": true} // "virtual"
+    },
+  },
+  "lang": "en",
+  "base": "http://example.org/",
+  "data": [
+    {
+      //"vocab": "foaf",
+      "id": "/person/1",
+      "type": "Person",
+      "name": "Jon Doe",
+      "title": "Mr.",
+      "bday": "1901-01-01",
+      "topicSet": ["/topic-for-a-person"]
+      "creations": [
+        {
+          //"vocab": "sioc",
+          "id": "/post/1",
+          "type": "Post", // because *one* type is given, vocab is set to what it's imported from
+          "title": "First Post", // because of Post, vocab is sioc, and since two title terms are defined, vocabGravity is checked and dc:title is determined
+          "creator": "/person/1",
+          "created": "2011-06-30",
+          "topicSet": ["/topic-for-a-post"] // because of Post, this is sioc:topic
+        }
+      ]
+    }
+  ]
+}
