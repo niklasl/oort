@@ -10,7 +10,7 @@
       "languageMapSuffix": "ByLang"
     },
     // probably predefined:
-    "autocast": ["date", "dateTime", "uri"],
+    "autocoerce": ["date", "dateTime", "uri"],
     "vocabularies": {
       // predefined:
       //"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -35,12 +35,12 @@
     },
     "define": {
       // predefined:(
-      "type": {"cast": "term"},
+      "type": {"coerce": "term"},
       "types": {"multipleOf": "type"}, // "virtual"
       //)
-      "name": {"cast": "string"}, // otherwise lang will apply
-      //"bday": {"cast": "date"}, // to explicitly cast to date
-      //"identifier": {"": "dc", cast": "anyURI"}, // to explicitly cast to anyURI
+      "name": {"coerce": "string"}, // otherwise lang will apply
+      //"bday": {"coerce": "date"}, // to explicitly coerce to date
+      //"identifier": {"": "dc", coerce": "anyURI"}, // to explicitly coerce to anyURI
       //"topicSet": true, // always as a multiple ("topic" + multipleSuffix)
       //"topics": {"term": "topic", multiple: true}, // always multiple, alias (no suffix)
       //"topic": {"multiple": true} // always multiple, use term name (no suffix or alias)
