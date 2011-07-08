@@ -8,9 +8,12 @@
       "collectionSuffix": "List",
       //bagSuffix: "Bag", seqSuffix: "Seq", altSuffix: "Alt" // legacy RDF containers
       "languageMapSuffix": "ByLang"
+      "relationSuffix": "Link",
+      //"reverseSuffix": "Inverse"
     },
     // probably predefined:
-    "autocoerce": ["date", "dateTime", "uri"],
+    //"autocoerce": ["date", "dateTime", "iri"],
+    "autocoerce": ["date", "dateTime"],
     "vocabularies": {
       // predefined:
       //"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -24,31 +27,39 @@
     "terms": {
       // predefined:
       //"rdf": ["type"],
-      //"rdfs": ["label", "comment"],
+      "rdfs": ["label", "comment"],
       "dc": ["title", "creator", "created"],
       "sioc": ["Post"]
+      //"foaf": [{"name": "title", "domain": "Person"}]
     },
     "typeterms": { // to override imports for certain types
       "Person": { // foaf:Person, since current vocab is foaf
         "foaf": ["title"]
       }
+      // what about support for e.g. owl:Class setting vocab to rdfs?
     },
     "define": {
       // predefined:(
-      "type": {"coerce": "term"},
+      "type": {"coerce": "term"}, // since both single and multiple defined, use single if 1
       "types": {"multipleOf": "type"}, // "virtual"
-      //)
+      // )
       "name": {"coerce": "string"}, // otherwise lang will apply
       //"bday": {"coerce": "date"}, // to explicitly coerce to date
-      //"identifier": {"": "dc", coerce": "anyURI"}, // to explicitly coerce to anyURI
+      //"identifier": {"vocab": "dc", coerce": "anyURI"}, // explicitly coerce to anyURI
       //"topicSet": true, // always as a multiple ("topic" + multipleSuffix)
       //"topics": {"term": "topic", multiple: true}, // always multiple, alias (no suffix)
       //"topic": {"multiple": true} // always multiple, use term name (no suffix or alias)
       "creations": {"inverseOf": "creator", "multiple": true} // "virtual"
+      //"posts": {"inverseOf": "creator", "multiple": true, "range": "Post"} // types items
     },
+    //"alias": {
+    //  "name": "nameString",
+    //  "creations": "creatorInverseSet"
+    //}
   },
   "lang": "en",
   "base": "http://example.org/",
+  //"selfLink": "http://example.org/person/1",
   "data": [
     {
       //"vocab": "foaf",
@@ -56,17 +67,18 @@
       "type": "Person",
       "name": "Jon Doe",
       "title": "Mr.",
+      "commentByLang": {"en": "A person.", "sv": "En person."},
       "bday": "1901-01-01",
-      "topicSet": ["/topic-for-a-person"]
-      "creations": [
+      "topicLinkSet": ["/topic-for-a-person"]
+      "creations": [ // creatorInverseSet
         {
           //"vocab": "sioc",
           "id": "/post/1",
           "type": "Post", // because *one* type is given, vocab is set to what it's imported from
           "title": "First Post", // because of Post, vocab is sioc, and since two title terms are defined, vocabGravity is checked and dc:title is determined
-          "creator": "/person/1",
+          "creatorLink": "/person/1",
           "created": "2011-06-30",
-          "topicSet": ["/topic-for-a-post"] // because of Post, this is sioc:topic
+          "topicLinkSet": ["/topic-for-a-post"] // because of Post, this is sioc:topic
         }
       ]
     }
